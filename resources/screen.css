@@ -1,0 +1,97 @@
+/**
+ * Basic styling for the Example skin.
+ */
+
+/* Page layout */
+
+html,
+body {
+	font-family: sans-serif;
+	margin: 0;
+	padding: 0;
+}
+
+#mw-wrapper {
+	width: 60em;
+	margin: 0 auto;
+	border-left: 1px solid black;
+	border-right: 1px solid black;
+	position: relative;
+}
+
+.mw-body {
+	width: 46em;
+	padding: 1em;
+	padding-top: 6em;
+	border-left: 1px solid black;
+	float: right;
+}
+
+#p-logo,
+#mw-navigation {
+	width: 10em;
+	padding-left: 1em;
+	clear: left;
+	float: left;
+}
+
+#p-logo {
+	text-align: center;
+}
+
+/* Search form and personal menu in top-right corner */
+
+#p-search {
+	position: absolute;
+	top: 1em;
+	right: 1em;
+	width: 46em;
+	text-align: right;
+}
+
+#p-personal {
+	position: absolute;
+	top: 3em;
+	right: 1em;
+	width: 46em;
+	text-align: right;
+}
+
+#p-personal ul {
+	list-style-type: none;
+	margin: 0;
+}
+
+#p-personal ul li {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+/* Footer */
+
+#mw-footer {
+	clear: both;
+	border-top: 1px solid black;
+	margin-top: 1em;
+	padding: 1em;
+}
+
+#mw-footer ul {
+	list-style-type: none;
+	margin: 0;
+}
+
+#mw-footer ul li {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+/* Hide some headings, but keep them accessible for screen-readers */
+
+#mw-navigation h2,
+#p-search h3,
+#p-personal h3 {
+	position: absolute;
+	top: -9999px;
+}
+
