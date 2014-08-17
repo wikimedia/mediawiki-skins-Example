@@ -12,7 +12,7 @@
  * @ingroup Skins
  */
 class SkinExample extends SkinTemplate {
-	var $skinname = 'example', $stylename = 'Example',
+	public $skinname = 'example', $stylename = 'Example',
 		$template = 'ExampleTemplate', $useHeadElement = true;
 
 	/**
