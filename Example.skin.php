@@ -102,7 +102,7 @@ class ExampleTemplate extends BaseTemplate {
 				<?php } ?>
 
 				<h1 class="firstHeading">
-					<span dir="auto"><?php $this->html( 'title' ) ?></span>
+					<?php $this->html( 'title' ) ?>
 				</h1>
 
 				<div id="siteSub"><?php $this->msg( 'tagline' ) ?></div>
