@@ -37,6 +37,6 @@ $wgResourceModules['skins.example'] = array(
 	'styles' => array(
 		'Example/resources/screen.css' => array( 'media' => 'screen' ),
 	),
-	'remoteBasePath' => &$GLOBALS['wgStylePath'],
-	'localBasePath' => &$GLOBALS['wgStyleDirectory'],
+	'remoteSkinPath' => 'Example',
+	'localBasePath' => __DIR__,
 );
