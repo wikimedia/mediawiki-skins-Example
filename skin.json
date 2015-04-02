@@ -1,0 +1,34 @@
+{
+	"name": "Example",
+	"version": "1.0",
+	"author": "...",
+	"url": "https://www.mediawiki.org/wiki/Skin:Example",
+	"descriptionmsg": "example-desc",
+	"namemsg": "skinname-example",
+	"license-name": "CC0",
+	"type": "skin",
+	"ValidSkinNames": {
+		"example": "Example"
+	},
+	"MessagesDirs": {
+		"Example": [
+			"i18n"
+		]
+	},
+	"ResourceModules": {
+		"skins.example": {
+			"styles": {
+				"Example/resources/screen.css": {
+					"media": "screen"
+				}
+			}
+		}
+	},
+	"ResourceFileModulePaths": {
+		"localBasePath": "",
+		"remoteSkinPath": "Example"
+	},
+	"AutoloadClasses": {
+		"SkinExample": "Example.skin.php"
+	}
+}
