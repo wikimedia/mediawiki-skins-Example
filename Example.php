@@ -25,7 +25,7 @@ $wgExtensionCredits['skin'][] = array(
 	'descriptionmsg' => 'example-desc',
 	// When modifying this skin, remember to change the license information if you do not want to
 	// waive all of your rights to your work!
-	'license' => 'CC0',
+	'license-name' => 'CC0',
 );
 
 $wgValidSkinNames['example'] = 'Example';
