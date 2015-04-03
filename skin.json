@@ -18,7 +18,7 @@
 	"ResourceModules": {
 		"skins.example": {
 			"styles": {
-				"Example/resources/screen.css": {
+				"resources/screen.css": {
 					"media": "screen"
 				}
 			}
