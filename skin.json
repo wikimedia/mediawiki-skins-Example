@@ -30,5 +30,6 @@
 	},
 	"AutoloadClasses": {
 		"SkinExample": "Example.skin.php"
-	}
+	},
+	"manifest_version": 1
 }
