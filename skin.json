@@ -5,7 +5,7 @@
 	"url": "https://www.mediawiki.org/wiki/Skin:Example",
 	"descriptionmsg": "example-desc",
 	"namemsg": "skinname-example",
-	"license-name": "CC0",
+	"license-name": "CC0-1.0",
 	"type": "skin",
 	"ValidSkinNames": {
 		"example": "Example"
