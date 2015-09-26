@@ -2,6 +2,6 @@
 	"@metadata": {
 		"authors": [ "..." ]
 	},
-	"skinname-example": "Example",
+	"example-skinname": "Example",
 	"example-desc": "An example skin showcasing the best practices"
 }
