@@ -2,6 +2,8 @@
  * Basic styling for the Example skin.
  */
 
+@import "variables.less";
+
 /* Page layout */
 
 html,
@@ -12,29 +14,13 @@ body {
 }
 
 #mw-wrapper {
-	width: 60em;
 	margin: 0 auto;
-	border-left: 1px solid black;
-	border-right: 1px solid black;
 	position: relative;
 }
 
 .mw-body {
-	width: 46em;
 	padding: 1em;
-	padding-top: 6em;
-	border-left: 1px solid black;
-	float: right;
 }
-
-#p-logo,
-#mw-navigation {
-	width: 10em;
-	padding-left: 1em;
-	clear: left;
-	float: left;
-}
-
 #p-logo {
 	text-align: center;
 }
@@ -55,16 +41,11 @@ body {
 	right: 1em;
 	width: 46em;
 	text-align: right;
-}
 
-#p-personal ul {
-	list-style-type: none;
-	margin: 0;
-}
-
-#p-personal ul li {
-	display: inline-block;
-	margin-right: 1em;
+	ul {
+		list-style-type: none;
+		margin: 0;
+	}
 }
 
 /* Footer */

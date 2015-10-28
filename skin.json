@@ -18,10 +18,24 @@
 	"ResourceModules": {
 		"skins.example": {
 			"styles": {
-				"resources/screen.css": {
+				"resources/libraries/normalise.css": {
 					"media": "screen"
+				},
+				"resources/screen-common.less": {
+					"media": "screen"
+				},
+				"resources/screen-desktop.less": {
+					"media": "screen and (min-width: 751px)"
+				},
+				"resources/screen-mobile.less": {
+					"media": "screen and (max-width: 750px)"
 				}
 			}
+		},
+		"skins.example.js": {
+			"scripts": [
+				"resources/main.js"
+			]
 		}
 	},
 	"ResourceFileModulePaths": {
@@ -30,7 +44,7 @@
 	},
 	"AutoloadClasses": {
 		"SkinExample": "Example.skin.php",
-		"ExampleTemplate": "Example.skin.php"
+		"ExampleTemplate": "ExampleTemplate.php"
 	},
 	"manifest_version": 1
 }
