@@ -17,6 +17,7 @@
 	},
 	"ResourceModules": {
 		"skins.example": {
+			"class": "ResourceLoaderSkinModule",
 			"position": "top",
 			"styles": {
 				"resources/libraries/normalise.css": {
