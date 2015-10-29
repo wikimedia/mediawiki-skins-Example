@@ -23,6 +23,16 @@ body {
 }
 #p-logo {
 	text-align: center;
+	width: 10em;
+
+	a.mw-wiki-logo {
+		display: block;
+		content: '';
+		width: 10em;
+		height: 10em;
+		background-repeat: no-repeat;
+		background-position: 50% 50%;
+	}
 }
 
 /* Search form and personal menu in top-right corner */
@@ -31,7 +41,6 @@ body {
 	position: absolute;
 	top: 1em;
 	right: 1em;
-	width: 46em;
 	text-align: right;
 }
 
@@ -39,7 +48,6 @@ body {
 	position: absolute;
 	top: 3em;
 	right: 1em;
-	width: 46em;
 	text-align: right;
 
 	ul {
@@ -52,7 +60,7 @@ body {
 
 #mw-footer {
 	clear: both;
-	border-top: 1px solid black;
+	border-top: 1px solid @border;
 	margin-top: 1em;
 	padding: 1em;
 }
@@ -67,12 +75,9 @@ body {
 	margin-right: 1em;
 }
 
-/* Hide some headings, but keep them accessible for screen-readers */
-
 #mw-navigation h2,
 #p-search h3,
 #p-personal h3 {
-	position: absolute;
-	top: -9999px;
+	.hidden;
 }
 

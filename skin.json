@@ -25,10 +25,10 @@
 					"media": "screen"
 				},
 				"resources/screen-desktop.less": {
-					"media": "screen and (min-width: 751px)"
+					"media": "screen and (min-width: 951px)"
 				},
 				"resources/screen-mobile.less": {
-					"media": "screen and (max-width: 750px)"
+					"media": "screen and (max-width: 950px)"
 				}
 			}
 		},

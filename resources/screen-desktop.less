@@ -1,13 +1,13 @@
 @import "variables.less";
 
 #mw-wrapper {
-	max-width: 60em;
-	border-left: 1px solid black;
-	border-right: 1px solid black;
+	width: 60em;
+	border-left: 1px solid @border;
+	border-right: 1px solid @border;
 }
 .mw-body {
-	width: 46em;
-	border-left: 1px solid black;
+	width: @width;
+	border-left: 1px solid @border;
 	float: right;
 	padding-top: 6em;
 }
@@ -24,10 +24,24 @@
 	display: inline-block;
 	margin-right: 1em;
 }
-#p-namespaces, #p-views, #p-actions {
-	float: left;
-	margin-right: 1em;
-}
-#p-navigation {
-	clear: both;
+#page-tools {
+	position: absolute;
+	top: 5em;
+	right: 1em;
+	width: @width;
+
+	div,
+	ul,
+	li {
+		list-style: none;
+		display: inline;
+		margin: 0;
+		padding: 0;
+	}
+	li {
+		padding-right: 1em;
+	}
+	h3 {
+		.hidden;
+	}
 }
