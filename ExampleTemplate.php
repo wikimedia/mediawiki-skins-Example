@@ -177,7 +177,7 @@ class ExampleTemplate extends BaseTemplate {
 	}
 
 	/**
-	 * Outputs the logo and site title
+	 * Outputs the search form
 	 */
 	private function outputSearch() {
 		?>
@@ -216,6 +216,10 @@ class ExampleTemplate extends BaseTemplate {
 			$this->outputPortlet( $box, true );
 		}
 	}
+
+	/**
+	 * Outputs page-related tools/links
+	 */
 	private function outputPageLinks() {
 		$this->outputPortlet( array(
 			'id' => 'p-namespaces',
@@ -238,6 +242,10 @@ class ExampleTemplate extends BaseTemplate {
 			'content' => $this->data['content_navigation']['actions'],
 		) );
 	}
+
+	/**
+	 * Outputs user tools menu
+	 */
 	private function outputUserLinks() {
 		$this->outputPortlet( array(
 			'id' => 'p-personal',
