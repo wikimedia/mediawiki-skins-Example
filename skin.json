@@ -17,6 +17,7 @@
 	},
 	"ResourceModules": {
 		"skins.example": {
+			"position": "top",
 			"styles": {
 				"resources/libraries/normalise.css": {
 					"media": "screen"
@@ -33,6 +34,7 @@
 			}
 		},
 		"skins.example.js": {
+			"position": "bottom",
 			"scripts": [
 				"resources/main.js"
 			]
