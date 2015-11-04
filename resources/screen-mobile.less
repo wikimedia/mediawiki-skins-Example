@@ -1,21 +1,54 @@
-@import "variables.less";
+/* Styles appear on displays 750 pixels wide and below */
 
-.mw-body,
-.firstHeading {
-	margin-top: 0;
+/* @import "variables.less"; */ // Not used here
+
+/* Make the logo smaller because we're dealing with less space here */
+#p-logo {
+	width: 6em;
+
+	a.mw-wiki-logo {
+		margin: 0 0 1em 1em;
+		width: 5em;
+		height: 5em;
+		background-size: contain;
+	}
+}
+#p-banner {
+	display: none;
 }
 
-#p-namespaces,
-#p-views,
-#p-actions {
-	float: left;
-	margin-right: 1em;
+/* Full-width thumbnails (to avoid really squished text around them) */
+div.thumb {
+	float: none;
 }
-#p-navigation {
-	clear: both;
+.thumb {
+	width: 100%;
+	margin: 1em auto;
+}
+div.tright {
+	margin-left: 0;
+
+	.thumbinner {
+		padding-left: 0;
+	}
+}
+div.tleft {
+	margin-right: 0;
+
+	.thumbinner {
+		padding-right: 0;
+	}
+}
+.thumbinner {
+	width: 100% !important;
+}
+.thumbimage {
+	display: block;
+	margin: 0 auto .5em;
 }
 
-.mw-body,
-#mw-navigation {
-	padding: 1em;
+/* Keep images from overflowing */
+.mw-body-content a > img {
+	height: auto !important;
+	max-width: 100% !important;
 }

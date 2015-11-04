@@ -1,47 +1,20 @@
+/* Styles appear on displays over 750 pixels wide */
+
 @import "variables.less";
 
+/* Contain the width on huge displays */
 #mw-wrapper {
-	width: 60em;
-	border-left: 1px solid @border;
-	border-right: 1px solid @border;
-}
-.mw-body {
-	width: @width;
-	border-left: 1px solid @border;
-	float: right;
-	padding-top: 6em;
+	max-width: @width;
 }
 
-#p-logo,
-#mw-navigation {
-	width: 10em;
-	padding-left: 1em;
-	clear: left;
-	float: left;
-}
-
-#p-personal ul li {
-	display: inline-block;
-	margin-right: 1em;
-}
-#page-tools {
-	position: absolute;
-	top: 5em;
-	right: 1em;
-	width: @width;
-
-	div,
-	ul,
-	li {
-		list-style: none;
-		display: inline;
+/* Splatter the site navigation at the bottom because why not */
+#site-navigation {
+	ul {
+		list-style-type: none;
 		margin: 0;
-		padding: 0;
 	}
 	li {
 		padding-right: 1em;
-	}
-	h3 {
-		.hidden;
+		display: inline-block;
 	}
 }
