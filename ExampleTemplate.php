@@ -27,6 +27,7 @@ class ExampleTemplate extends BaseTemplate {
 					<div class="usermessage"><?php $this->html( 'newtalk' ) ?></div>
 					<?php
 				}
+				echo $this->getIndicators();
 				?>
 
 				<h1 class="firstHeading">
