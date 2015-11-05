@@ -51,7 +51,13 @@ class ExampleTemplate extends BaseTemplate {
 					</div>
 
 					<?php
-					$this->html( 'bodytext' );
+					$this->html( 'bodycontent' );
+					$this->clear();
+					?>
+					<div class="printfooter">
+						<?php $this->html( 'printfooter' ); ?>
+					</div>
+					<?php
 					$this->html( 'catlinks' );
 					$this->html( 'dataAfterContent' );
 					?>
@@ -73,27 +79,11 @@ class ExampleTemplate extends BaseTemplate {
 			</div>
 
 			<div id="mw-footer">
-				<?php
-				foreach ( $this->getFooterLinks() as $category => $links ) {
-					?>
-					<ul role="contentinfo">
-						<?php
-						foreach ( $links as $key ) {
-							?>
-							<li><?php $this->html( $key ) ?></li>
-							<?php
-						}
-						?>
-					</ul>
-					<?php
-				}
-				?>
-
-				<ul role="contentinfo">
+				<ul id="footer-icons" role="contentinfo">
 					<?php
 					foreach ( $this->getFooterIcons( 'icononly' ) as $blockName => $footerIcons ) {
 						?>
-						<li>
+						<li id="footer-<?php echo htmlspecialchars( $blockName, ENT_QUOTES ) ?>ico">
 							<?php
 							foreach ( $footerIcons as $icon ) {
 								echo $this->getSkin()->makeFooterIcon( $icon );
@@ -104,6 +94,22 @@ class ExampleTemplate extends BaseTemplate {
 					}
 					?>
 				</ul>
+				<?php
+				foreach ( $this->getFooterLinks() as $category => $links ) {
+					?>
+					<ul id="footer-<?php echo htmlspecialchars( $category, ENT_QUOTES ) ?>" role="contentinfo">
+						<?php
+						foreach ( $links as $key ) {
+							?>
+							<li id="footer-<?php echo htmlspecialchars( $category, ENT_QUOTES ) ?>-<?php echo htmlspecialchars( $key, ENT_QUOTES ) ?>"><?php $this->html( $key ) ?></li>
+						<?php
+						}
+						?>
+					</ul>
+					<?php
+				}
+				$this->clear();
+				?>
 			</div>
 		</div>
 
@@ -133,7 +139,7 @@ class ExampleTemplate extends BaseTemplate {
 				if ( isset( $box['headerMessage'] ) ) {
 					echo $this->getMsg( $box['headerMessage'] )->escaped();
 				} else {
-					echo htmlspecialchars( $box['header'] );
+					echo htmlspecialchars( $box['header'], ENT_QUOTES );
 				}
 				?>
 			</h3>
@@ -155,19 +161,19 @@ class ExampleTemplate extends BaseTemplate {
 	/**
 	 * Outputs the logo and (optionally) site title
 	 */
-	private function outputLogo( $id = 'p-logo', $imageonly = false ) {
+	private function outputLogo( $id = 'p-logo', $imageOnly = false ) {
 		?>
 		<div id="<?php echo $id ?>" class="mw-portlet" role="banner">
 			<a
 				class="mw-wiki-logo"
-				href="<?php echo htmlspecialchars( $this->data['nav_urls']['mainpage']['href'] )
+				href="<?php echo htmlspecialchars( $this->data['nav_urls']['mainpage']['href'], ENT_QUOTES )
 			?>" <?php
 			echo Xml::expandAttributes( Linker::tooltipAndAccesskeyAttribs( 'p-logo' ) )
 			?>></a>
 			<?php
-			if ( !$imageonly ) {
+			if ( !$imageOnly ) {
 				?>
-				<a id="p-banner" class="mw-wiki-title" href="<?php echo htmlspecialchars( $this->data['nav_urls']['mainpage']['href'] ) ?>">
+				<a id="p-banner" class="mw-wiki-title" href="<?php echo htmlspecialchars( $this->data['nav_urls']['mainpage']['href'], ENT_QUOTES ) ?>">
 					<?php echo $this->getMsg( 'sitetitle' )->escaped() ?>
 				</a>
 				<?php
@@ -192,9 +198,9 @@ class ExampleTemplate extends BaseTemplate {
 			<h3>
 				<label for="searchInput"><?php echo $this->getMsg( 'search' )->escaped() ?></label>
 			</h3>
-			<?php echo $this->makeSearchInput( array( "id" => "searchInput" ) ) ?>
+			<?php echo $this->makeSearchInput( array( 'id' => 'searchInput' ) ) ?>
 			<?php echo $this->makeSearchButton( 'go', array( 'id' => 'searchGoButton', 'class' => 'searchButton' ) ) ?>
-			<input type='hidden' name="title" value="<?php $this->text( 'searchtitle' ) ?>"/>
+			<input type="hidden" name="title" value="<?php $this->text( 'searchtitle' ) ?>"/>
 		</form>
 		<?php
 	}
@@ -253,5 +259,12 @@ class ExampleTemplate extends BaseTemplate {
 			'headerMessage' => 'personaltools',
 			'content' => $this->getPersonalTools(),
 		) );
+	}
+
+	/**
+	 * Outputs a css clear using the core visualClear class
+	 */
+	private function clear() {
+		echo '<div class="visualClear"></div>';
 	}
 }
