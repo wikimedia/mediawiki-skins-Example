@@ -1,11 +1,12 @@
 /* Styles appear on displays 750 pixels wide and below */
 
-/* @import "variables.less"; */ // Not used here
+// @import "variables.less"; (Not used here)
 
-/* Make the logo smaller because we're dealing with less space here */
 #p-logo {
 	width: 6em;
 
+	// Make the logo smaller because we're dealing with less space here
+	// Note that background-size doesn't necessarily work in older browsers, but whatever
 	a.mw-wiki-logo {
 		margin: 0 0 1em 1em;
 		width: 5em;
@@ -17,7 +18,7 @@
 	display: none;
 }
 
-/* Full-width thumbnails (to avoid really squished text around them) */
+// Full-width thumbnails (to avoid having really squished text around them)
 div.thumb {
 	float: none;
 }
@@ -47,8 +48,12 @@ div.tleft {
 	margin: 0 auto .5em;
 }
 
-/* Keep images from overflowing */
+// Keep images from overflowing
 .mw-body-content a > img {
 	height: auto !important;
 	max-width: 100% !important;
+}
+
+.nomobile {
+	display: none;
 }

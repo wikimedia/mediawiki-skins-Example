@@ -1,13 +1,9 @@
 /* Styles for print view and printing */
 
+/* Hide some extra stuff from print view (some of the navigation is already hidden automatically, but not all) */
+.mw-indicators,
 #p-logo,
 #catlinks,
-#footer-icons {
+#mw-footer {
 	display: none;
-}
-
-#mw-footer ul {
-	list-style: none;
-	margin: 0;
-	padding: 0;
 }

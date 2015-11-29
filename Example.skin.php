@@ -13,8 +13,7 @@ class SkinExample extends SkinTemplate {
 	 *
 	 * @param $out OutputPage
 	 */
-	function setupSkinUserCss( OutputPage $out ) {
-		parent::setupSkinUserCss( $out );
+	public function initPage( OutputPage $out ) {
 
 		$out->addMeta( 'viewport', 'width=device-width, initial-scale=1.0' );
 
@@ -23,6 +22,15 @@ class SkinExample extends SkinTemplate {
 			'mediawiki.skinning.content.externallinks',
 			'skins.example'
 		) );
-		$out->addModules( array( 'skins.example.js' ) );
+		$out->addModules( array(
+			'skins.example.js'
+		) );
+	}
+
+	/**
+	 * @param $out OutputPage
+	 */
+	function setupSkinUserCss( OutputPage $out ) {
+		parent::setupSkinUserCss( $out );
 	}
 }
