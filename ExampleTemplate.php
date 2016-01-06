@@ -30,7 +30,7 @@ class ExampleTemplate extends BaseTemplate {
 				echo $this->getIndicators();
 				?>
 
-				<h1 class="firstHeading">
+				<h1 class="firstHeading" lang="<?php $this->text( 'pageLanguage' ); ?>">
 					<?php $this->html( 'title' ) ?>
 				</h1>
 				<div id="siteSub"><?php echo $this->getMsg( 'tagline' )->parse() ?></div>
