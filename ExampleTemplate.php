@@ -12,9 +12,6 @@ class ExampleTemplate extends BaseTemplate {
 		$this->html( 'headelement' );
 		?>
 		<div id="mw-wrapper">
-			<?php
-			$this->outputLogo();
-			?>
 			<div class="mw-body" role="main">
 				<?php
 				if ( $this->data['sitenotice'] ) {
@@ -67,6 +64,7 @@ class ExampleTemplate extends BaseTemplate {
 			<div id="mw-navigation">
 				<h2><?php echo $this->getMsg( 'navigation-heading' )->parse() ?></h2>
 				<?php
+				$this->outputLogo();
 				$this->outputSearch();
 				echo '<div id="user-tools">';
 					$this->outputUserLinks();
@@ -164,13 +162,14 @@ class ExampleTemplate extends BaseTemplate {
 	private function outputLogo( $id = 'p-logo', $imageOnly = false ) {
 		?>
 		<div id="<?php echo $id ?>" class="mw-portlet" role="banner">
-			<a
-				class="mw-wiki-logo"
-				href="<?php echo htmlspecialchars( $this->data['nav_urls']['mainpage']['href'], ENT_QUOTES )
-			?>" <?php
-			echo Xml::expandAttributes( Linker::tooltipAndAccesskeyAttribs( 'p-logo' ) )
-			?>></a>
 			<?php
+			echo Html::element(
+				'a',
+				array(
+					'href' => $this->data['nav_urls']['mainpage']['href'],
+					'class' => 'mw-wiki-logo',
+				) + Linker::tooltipAndAccesskeyAttribs( 'p-logo' )
+			);
 			if ( !$imageOnly ) {
 				?>
 				<a id="p-banner" class="mw-wiki-title" href="<?php echo htmlspecialchars( $this->data['nav_urls']['mainpage']['href'], ENT_QUOTES ) ?>">
