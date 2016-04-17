@@ -118,90 +118,95 @@ class ExampleTemplate extends BaseTemplate {
 	}
 
 	/**
-	 * Outputs a single sidebar portlet of any kind.
+	 * Creates a single sidebar portlet of any kind
+	 * @return string
 	 */
-	private function outputPortlet( $box ) {
+	private function assemblePortlet( $box ) {
 		if ( !$box['content'] ) {
 			return;
 		}
 
-		?>
-		<div
-			role="navigation"
-			class="mw-portlet"
-			id="<?php echo Sanitizer::escapeId( $box['id'] ) ?>"
-			<?php echo Linker::tooltip( $box['id'] ) ?>
-		>
-			<h3>
-				<?php
-				if ( isset( $box['headerMessage'] ) ) {
-					echo $this->getMsg( $box['headerMessage'] )->escaped();
-				} else {
-					echo htmlspecialchars( $box['header'], ENT_QUOTES );
-				}
-				?>
-			</h3>
+		$content = Html::openElement(
+			'div',
+			array(
+				'role' => 'navigation',
+				'class' => 'mw-portlet',
+				'id' => Sanitizer::escapeId( $box['id'] )
+			) + Linker::tooltipAndAccesskeyAttribs( $box['id'] )
+		);
+		$content .= Html::element(
+			'h3',
+			[],
+			isset( $box['headerMessage'] ) ? $this->getMsg( $box['headerMessage'] )->text() : $box['header'] );
+		if ( is_array( $box['content'] ) ) {
+			$content .= Html::openElement( 'ul' );
+			foreach ( $box['content'] as $key => $item ) {
+				$content .= $this->makeListItem( $key, $item );
+			}
+			$content .= Html::closeElement( 'ul' );
+		} else {
+			$content .= $box['content'];
+		}
+		$content .= Html::closeElement( 'div' );
 
-			<?php
-			if ( is_array( $box['content'] ) ) {
-				echo '<ul>';
-				foreach ( $box['content'] as $key => $item ) {
-					echo $this->makeListItem( $key, $item );
-				}
-				echo '</ul>';
-			} else {
-				echo $box['content'];
-			}?>
-		</div>
-		<?php
+		return $content;
 	}
 
 	/**
 	 * Outputs the logo and (optionally) site title
 	 */
 	private function outputLogo( $id = 'p-logo', $imageOnly = false ) {
-		?>
-		<div id="<?php echo $id ?>" class="mw-portlet" role="banner">
-			<?php
+		echo Html::openElement(
+			'div',
+			array(
+				'id' => $id,
+				'class' => 'mw-portlet',
+				'role' => 'banner'
+			)
+		);
+		echo Html::element(
+			'a',
+			array(
+				'href' => $this->data['nav_urls']['mainpage']['href'],
+				'class' => 'mw-wiki-logo',
+			) + Linker::tooltipAndAccesskeyAttribs( 'p-logo' )
+		);
+		if ( !$imageOnly ) {
 			echo Html::element(
 				'a',
 				array(
-					'href' => $this->data['nav_urls']['mainpage']['href'],
-					'class' => 'mw-wiki-logo',
-				) + Linker::tooltipAndAccesskeyAttribs( 'p-logo' )
+					'id' => 'p-banner',
+					'class' => 'mw-wiki-title',
+					'href'=> $this->data['nav_urls']['mainpage']['href']
+				) + Linker::tooltipAndAccesskeyAttribs( 'p-logo' ),
+				$this->getMsg( 'sitetitle' )->escaped()
 			);
-			if ( !$imageOnly ) {
-				?>
-				<a id="p-banner" class="mw-wiki-title" href="<?php echo htmlspecialchars( $this->data['nav_urls']['mainpage']['href'], ENT_QUOTES ) ?>">
-					<?php echo $this->getMsg( 'sitetitle' )->escaped() ?>
-				</a>
-				<?php
-			}
-			?>
-		</div>
-		<?php
+		}
+		echo Html::closeElement( 'div' );
 	}
 
 	/**
 	 * Outputs the search form
 	 */
 	private function outputSearch() {
-		?>
-		<form
-			action="<?php $this->text( 'wgScript' ) ?>"
-			role="search"
-			class="mw-portlet"
-			id="p-search"
-		>
-			<input type="hidden" name="title" value="<?php $this->text( 'searchtitle' ) ?>" />
-			<h3>
-				<label for="searchInput"><?php echo $this->getMsg( 'search' )->escaped() ?></label>
-			</h3>
-			<?php echo $this->makeSearchInput( array( 'id' => 'searchInput' ) ) ?>
-			<?php echo $this->makeSearchButton( 'go', array( 'id' => 'searchGoButton', 'class' => 'searchButton' ) ) ?>
-			<input type="hidden" name="title" value="<?php $this->text( 'searchtitle' ) ?>"/>
-		</form>
-		<?php
+		echo Html::openElement(
+			'form',
+			array(
+				'action' => htmlspecialchars( $this->get( 'wgScript' ) ),
+				'role' => 'search',
+				'class' => 'mw-portlet',
+				'id' => 'p-search'
+			)
+		);
+		echo Html::hidden( 'title', htmlspecialchars( $this->get( 'searchtitle' ) ) );
+		echo Html::rawelement(
+			'h3',
+			[],
+			Html::label( $this->getMsg( 'search' )->escaped(), 'searchInput' )
+		);
+		echo $this->makeSearchInput( array( 'id' => 'searchInput' ) );
+		echo $this->makeSearchButton( 'go', array( 'id' => 'searchGoButton', 'class' => 'searchButton' ) );
+		echo Html::closeElement( 'form' );
 	}
 
 	/**
@@ -219,7 +224,7 @@ class ExampleTemplate extends BaseTemplate {
 			if ( $boxName === false ) {
 				continue;
 			}
-			$this->outputPortlet( $box, true );
+			echo $this->assemblePortlet( $box, true );
 		}
 	}
 
@@ -227,33 +232,34 @@ class ExampleTemplate extends BaseTemplate {
 	 * Outputs page-related tools/links
 	 */
 	private function outputPageLinks() {
-		$this->outputPortlet( array(
+		$links = $this->assemblePortlet( array(
 			'id' => 'p-namespaces',
 			'headerMessage' => 'namespaces',
 			'content' => $this->data['content_navigation']['namespaces'],
 		) );
-		$this->outputPortlet( array(
+		$links .= $this->assemblePortlet( array(
 			'id' => 'p-variants',
 			'headerMessage' => 'variants',
 			'content' => $this->data['content_navigation']['variants'],
 		) );
-		$this->outputPortlet( array(
+		$links .= $this->assemblePortlet( array(
 			'id' => 'p-views',
 			'headerMessage' => 'views',
 			'content' => $this->data['content_navigation']['views'],
 		) );
-		$this->outputPortlet( array(
+		$links .= $this->assemblePortlet( array(
 			'id' => 'p-actions',
 			'headerMessage' => 'actions',
 			'content' => $this->data['content_navigation']['actions'],
 		) );
+		echo $links;
 	}
 
 	/**
 	 * Outputs user tools menu
 	 */
 	private function outputUserLinks() {
-		$this->outputPortlet( array(
+		echo $this->assemblePortlet( array(
 			'id' => 'p-personal',
 			'headerMessage' => 'personaltools',
 			'content' => $this->getPersonalTools(),
