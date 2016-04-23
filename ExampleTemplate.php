@@ -15,46 +15,63 @@ class ExampleTemplate extends BaseTemplate {
 			<div class="mw-body" role="main">
 				<?php
 				if ( $this->data['sitenotice'] ) {
-					?>
-					<div id="siteNotice"><?php $this->html( 'sitenotice' ) ?></div>
-					<?php
+					echo Html::rawElement(
+						'div',
+						array( 'id' => 'siteNotice' ),
+						$this->get( 'sitenotice' )
+					);
 				}
 				if ( $this->data['newtalk'] ) {
-					?>
-					<div class="usermessage"><?php $this->html( 'newtalk' ) ?></div>
-					<?php
+					echo Html::rawElement(
+						'div',
+						array( 'class' => 'usermessage' ),
+						$this->get( 'newtalk' )
+					);
 				}
 				echo $this->getIndicators();
+				echo Html::rawElement(
+					'h1',
+					array(
+						'class' => 'firstHeading',
+						'lang' => $this->get( 'pageLanguage' )
+					),
+					$this->get( 'title' )
+				);
+
+				echo Html::rawElement(
+					'div',
+					array( 'id' => 'siteSub' ),
+					$this->getMsg( 'tagline' )->parse()
+				);
 				?>
 
-				<h1 class="firstHeading" lang="<?php $this->text( 'pageLanguage' ); ?>">
-					<?php $this->html( 'title' ) ?>
-				</h1>
-				<div id="siteSub"><?php echo $this->getMsg( 'tagline' )->parse() ?></div>
 				<div class="mw-body-content">
-					<div id="contentSub">
-						<?php
-						if ( $this->data['subtitle'] ) {
-							?>
-							<p><?php $this->html( 'subtitle' ) ?></p>
-							<?php
-						}
-						if ( $this->data['undelete'] ) {
-							?>
-							<p><?php $this->html( 'undelete' ) ?></p>
-							<?php
-						}
-						?>
-					</div>
-
 					<?php
+					echo Html::openElement(
+						'div',
+						array( 'id' => 'contentSub' )
+					);
+					if ( $this->data['subtitle'] ) {
+						echo Html::rawelement (
+							'p',
+							[],
+							$this->get( 'subtitle' )
+						);
+					}
+					echo Html::rawelement (
+						'p',
+						[],
+						$this->get( 'undelete' )
+					);
+					echo Html::closeElement( 'div' );
+
 					$this->html( 'bodycontent' );
 					$this->clear();
-					?>
-					<div class="printfooter">
-						<?php $this->html( 'printfooter' ); ?>
-					</div>
-					<?php
+					echo Html::rawElement(
+						'div',
+						array( 'class' => 'printfooter' ),
+						$this->get( 'printfooter' )
+					);
 					$this->html( 'catlinks' );
 					$this->html( 'dataAfterContent' );
 					?>
@@ -62,49 +79,80 @@ class ExampleTemplate extends BaseTemplate {
 			</div>
 
 			<div id="mw-navigation">
-				<h2><?php echo $this->getMsg( 'navigation-heading' )->parse() ?></h2>
 				<?php
-				$this->outputLogo();
-				$this->outputSearch();
-				echo '<div id="user-tools">';
-					$this->outputUserLinks();
-				echo '</div><div id="page-tools">';
-					$this->outputPageLinks();
-				echo '</div><div id="site-navigation">';
-					$this->outputSiteNavigation();
-				echo '</div>';
+				echo Html::rawElement(
+					'h2',
+					[],
+					$this->getMsg( 'navigation-heading' )->parse()
+				);
+
+				echo $this->getLogo();
+				echo $this->getSearch();
+
+				// User profile links
+				echo Html::rawElement(
+					'div',
+					array( 'id' => 'user-tools' ),
+					$this->getUserLinks()
+				);
+
+				// Page editing and tools
+				echo Html::rawElement(
+					'div',
+					array( 'id' => 'page-tools' ),
+					$this->getPageLinks()
+				);
+
+				// Site navigation/sidebar
+				echo Html::rawElement(
+					'div',
+					array( 'id' => 'site-navigation' ),
+					$this->getSiteNavigation()
+				);
 				?>
 			</div>
 
 			<div id="mw-footer">
-				<ul id="footer-icons" role="contentinfo">
-					<?php
-					foreach ( $this->getFooterIcons( 'icononly' ) as $blockName => $footerIcons ) {
-						?>
-						<li id="footer-<?php echo htmlspecialchars( $blockName, ENT_QUOTES ) ?>ico">
-							<?php
-							foreach ( $footerIcons as $icon ) {
-								echo $this->getSkin()->makeFooterIcon( $icon );
-							}
-							?>
-						</li>
-						<?php
-					}
-					?>
-				</ul>
 				<?php
+				echo Html::openElement(
+					'ul',
+					array(
+						'id' => 'footer-icons',
+						'role' => 'contentinfo'
+					)
+				);
+				foreach ( $this->getFooterIcons( 'icononly' ) as $blockName => $footerIcons ) {
+					echo Html::openElement(
+						'li',
+						array(
+							'id' => 'footer-' . Sanitizer::escapeId( $blockName ) . 'ico'
+						)
+					);
+					foreach ( $footerIcons as $icon ) {
+						echo $this->getSkin()->makeFooterIcon( $icon );
+					}
+					echo Html::closeElement( 'li' );
+				}
+				echo Html::closeElement( 'ul' );
+
 				foreach ( $this->getFooterLinks() as $category => $links ) {
-					?>
-					<ul id="footer-<?php echo htmlspecialchars( $category, ENT_QUOTES ) ?>" role="contentinfo">
-						<?php
-						foreach ( $links as $key ) {
-							?>
-							<li id="footer-<?php echo htmlspecialchars( $category, ENT_QUOTES ) ?>-<?php echo htmlspecialchars( $key, ENT_QUOTES ) ?>"><?php $this->html( $key ) ?></li>
-						<?php
-						}
-						?>
-					</ul>
-					<?php
+					echo Html::openElement(
+						'ul',
+						array(
+							'id' => 'footer-' . Sanitizer::escapeId( $category ),
+							'role' => 'contentinfo'
+						)
+					);
+					foreach ( $links as $key ) {
+						echo Html::rawElement(
+							'li',
+							array(
+								'id' => 'footer-' . Sanitizer::escapeId( $category . '-' . $key )
+							),
+							$this->get( $key )
+						);
+					}
+					echo Html::closeElement( 'ul' );
 				}
 				$this->clear();
 				?>
@@ -112,21 +160,22 @@ class ExampleTemplate extends BaseTemplate {
 		</div>
 
 		<?php $this->printTrail() ?>
-		</body></html>
+		</body>
+		</html>
 
 		<?php
 	}
 
 	/**
-	 * Creates a single sidebar portlet of any kind
-	 * @return string
+	 * Generates a single sidebar portlet of any kind
+	 * @return string html
 	 */
-	private function assemblePortlet( $box ) {
+	private function getPortlet( $box ) {
 		if ( !$box['content'] ) {
 			return;
 		}
 
-		$content = Html::openElement(
+		$html = Html::openElement(
 			'div',
 			array(
 				'role' => 'navigation',
@@ -134,29 +183,30 @@ class ExampleTemplate extends BaseTemplate {
 				'id' => Sanitizer::escapeId( $box['id'] )
 			) + Linker::tooltipAndAccesskeyAttribs( $box['id'] )
 		);
-		$content .= Html::element(
+		$html .= Html::element(
 			'h3',
 			[],
 			isset( $box['headerMessage'] ) ? $this->getMsg( $box['headerMessage'] )->text() : $box['header'] );
 		if ( is_array( $box['content'] ) ) {
-			$content .= Html::openElement( 'ul' );
+			$html .= Html::openElement( 'ul' );
 			foreach ( $box['content'] as $key => $item ) {
-				$content .= $this->makeListItem( $key, $item );
+				$html .= $this->makeListItem( $key, $item );
 			}
-			$content .= Html::closeElement( 'ul' );
+			$html .= Html::closeElement( 'ul' );
 		} else {
-			$content .= $box['content'];
+			$html .= $box['content'];
 		}
-		$content .= Html::closeElement( 'div' );
+		$html .= Html::closeElement( 'div' );
 
-		return $content;
+		return $html;
 	}
 
 	/**
-	 * Outputs the logo and (optionally) site title
+	 * Generates the logo and (optionally) site title
+	 * @return string html
 	 */
-	private function outputLogo( $id = 'p-logo', $imageOnly = false ) {
-		echo Html::openElement(
+	private function getLogo( $id = 'p-logo', $imageOnly = false ) {
+		$html = Html::openElement(
 			'div',
 			array(
 				'id' => $id,
@@ -164,7 +214,7 @@ class ExampleTemplate extends BaseTemplate {
 				'role' => 'banner'
 			)
 		);
-		echo Html::element(
+		$html .= Html::element(
 			'a',
 			array(
 				'href' => $this->data['nav_urls']['mainpage']['href'],
@@ -172,7 +222,7 @@ class ExampleTemplate extends BaseTemplate {
 			) + Linker::tooltipAndAccesskeyAttribs( 'p-logo' )
 		);
 		if ( !$imageOnly ) {
-			echo Html::element(
+			$html .= Html::element(
 				'a',
 				array(
 					'id' => 'p-banner',
@@ -182,14 +232,17 @@ class ExampleTemplate extends BaseTemplate {
 				$this->getMsg( 'sitetitle' )->escaped()
 			);
 		}
-		echo Html::closeElement( 'div' );
+		$html .= Html::closeElement( 'div' );
+
+		return $html;
 	}
 
 	/**
-	 * Outputs the search form
+	 * Generates the search form
+	 * @return string html
 	 */
-	private function outputSearch() {
-		echo Html::openElement(
+	private function getSearch() {
+		$html = Html::openElement(
 			'form',
 			array(
 				'action' => htmlspecialchars( $this->get( 'wgScript' ) ),
@@ -198,22 +251,27 @@ class ExampleTemplate extends BaseTemplate {
 				'id' => 'p-search'
 			)
 		);
-		echo Html::hidden( 'title', htmlspecialchars( $this->get( 'searchtitle' ) ) );
-		echo Html::rawelement(
+		$html .= Html::hidden( 'title', htmlspecialchars( $this->get( 'searchtitle' ) ) );
+		$html .= Html::rawelement(
 			'h3',
 			[],
 			Html::label( $this->getMsg( 'search' )->escaped(), 'searchInput' )
 		);
-		echo $this->makeSearchInput( array( 'id' => 'searchInput' ) );
-		echo $this->makeSearchButton( 'go', array( 'id' => 'searchGoButton', 'class' => 'searchButton' ) );
-		echo Html::closeElement( 'form' );
+		$html .= $this->makeSearchInput( array( 'id' => 'searchInput' ) );
+		$html .= $this->makeSearchButton( 'go', array( 'id' => 'searchGoButton', 'class' => 'searchButton' ) );
+		$html .= Html::closeElement( 'form' );
+
+		return $html;
 	}
 
 	/**
-	 * Outputs the sidebar
+	 * Generates the sidebar
 	 * Set the elements to true to allow them to be part of the sidebar
+	 * @return string html
 	 */
-	private function outputSiteNavigation() {
+	private function getSiteNavigation() {
+		$html = '';
+
 		$sidebar = $this->getSidebar();
 
 		$sidebar['SEARCH'] = false;
@@ -224,42 +282,47 @@ class ExampleTemplate extends BaseTemplate {
 			if ( $boxName === false ) {
 				continue;
 			}
-			echo $this->assemblePortlet( $box, true );
+			$html .= $this->getPortlet( $box, true );
 		}
+
+		return $html;
 	}
 
 	/**
-	 * Outputs page-related tools/links
+	 * Generates page-related tools/links
+	 * @return string html
 	 */
-	private function outputPageLinks() {
-		$links = $this->assemblePortlet( array(
+	private function getPageLinks() {
+		$html = $this->getPortlet( array(
 			'id' => 'p-namespaces',
 			'headerMessage' => 'namespaces',
 			'content' => $this->data['content_navigation']['namespaces'],
 		) );
-		$links .= $this->assemblePortlet( array(
+		$html .= $this->getPortlet( array(
 			'id' => 'p-variants',
 			'headerMessage' => 'variants',
 			'content' => $this->data['content_navigation']['variants'],
 		) );
-		$links .= $this->assemblePortlet( array(
+		$html .= $this->getPortlet( array(
 			'id' => 'p-views',
 			'headerMessage' => 'views',
 			'content' => $this->data['content_navigation']['views'],
 		) );
-		$links .= $this->assemblePortlet( array(
+		$html .= $this->getPortlet( array(
 			'id' => 'p-actions',
 			'headerMessage' => 'actions',
 			'content' => $this->data['content_navigation']['actions'],
 		) );
-		echo $links;
+
+		return $html;
 	}
 
 	/**
-	 * Outputs user tools menu
+	 * Generates user tools menu
+	 * @return string html
 	 */
-	private function outputUserLinks() {
-		echo $this->assemblePortlet( array(
+	private function getUserLinks() {
+		return $this->getPortlet( array(
 			'id' => 'p-personal',
 			'headerMessage' => 'personaltools',
 			'content' => $this->getPersonalTools(),
