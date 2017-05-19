@@ -66,7 +66,7 @@ class ExampleTemplate extends BaseTemplate {
 					echo Html::closeElement( 'div' );
 
 					$this->html( 'bodycontent' );
-					echo $this->clear();
+					echo $this->getClear();
 					echo Html::rawElement(
 						'div',
 						array( 'class' => 'printfooter' ),
@@ -112,51 +112,7 @@ class ExampleTemplate extends BaseTemplate {
 				?>
 			</div>
 
-			<div id="mw-footer">
-				<?php
-				echo Html::openElement(
-					'ul',
-					array(
-						'id' => 'footer-icons',
-						'role' => 'contentinfo'
-					)
-				);
-				foreach ( $this->getFooterIcons( 'icononly' ) as $blockName => $footerIcons ) {
-					echo Html::openElement(
-						'li',
-						array(
-							'id' => 'footer-' . Sanitizer::escapeId( $blockName ) . 'ico'
-						)
-					);
-					foreach ( $footerIcons as $icon ) {
-						echo $this->getSkin()->makeFooterIcon( $icon );
-					}
-					echo Html::closeElement( 'li' );
-				}
-				echo Html::closeElement( 'ul' );
-
-				foreach ( $this->getFooterLinks() as $category => $links ) {
-					echo Html::openElement(
-						'ul',
-						array(
-							'id' => 'footer-' . Sanitizer::escapeId( $category ),
-							'role' => 'contentinfo'
-						)
-					);
-					foreach ( $links as $key ) {
-						echo Html::rawElement(
-							'li',
-							array(
-								'id' => 'footer-' . Sanitizer::escapeId( $category . '-' . $key )
-							),
-							$this->get( $key )
-						);
-					}
-					echo Html::closeElement( 'ul' );
-				}
-				echo $this->clear();
-				?>
-			</div>
+			<?php echo $this->getFooter(); ?>
 		</div>
 
 		<?php $this->printTrail() ?>
@@ -164,95 +120,6 @@ class ExampleTemplate extends BaseTemplate {
 		</html>
 
 		<?php
-	}
-
-	/**
-	 * Generates a block of navigation links with a header
-	 *
-	 * @param string $name
-	 * @param array|string $content array of links for use with makeListItem,
-	 * or a block of text
-	 * @param null|string|array|bool $msg
-	 *
-	 * @return string html
-	 */
-	protected function getPortlet( $name, $content, $msg = null ) {
-		if ( $msg === null ) {
-			$msg = $name;
-		} elseif ( is_array( $msg ) ) {
-			$msgString = array_shift( $msg );
-			$msgParams = $msg;
-			$msg = $msgString;
-		}
-		$msgObj = wfMessage( $msg );
-		if ( $msgObj->exists() ) {
-			if ( isset( $msgParams ) && !empty( $msgParams ) ) {
-				$msgString = $this->getMsg( $msg, $msgParams )->parse();
-			} else {
-				$msgString = $msgObj->parse();
-			}
-		} else {
-			$msgString = htmlspecialchars( $msg );
-		}
-
-		// HACK: Compatibility with extensions still using SkinTemplateToolboxEnd
-		$hookContents = '';
-		if ( $name == 'tb' ) {
-			if ( isset( $boxes['TOOLBOX'] ) ) {
-				ob_start();
-				// We pass an extra 'true' at the end so extensions using BaseTemplateToolbox
-				// can abort and avoid outputting double toolbox links
-				// Avoid PHP 7.1 warning from passing $this by reference
-				$template = $this;
-				Hooks::run( 'SkinTemplateToolboxEnd', [ &$template, true ] );
-				$hookContents = ob_get_contents();
-				ob_end_clean();
-				if ( !trim( $hookContents ) ) {
-					$hookContents = '';
-				}
-			}
-		}
-		// END hack
-
-		$labelId = Sanitizer::escapeId( "p-$name-label" );
-
-		if ( is_array( $content ) ) {
-			$contentText = Html::openElement( 'ul' );
-			foreach ( $content as $key => $item ) {
-				$contentText .= $this->makeListItem(
-					$key,
-					$item,
-					[ 'text-wrapper' => [ 'tag' => 'span' ] ]
-				);
-			}
-			// Add in SkinTemplateToolboxEnd, if any
-			$contentText .= $hookContents;
-			$contentText .= Html::closeElement( 'ul' );
-		} else {
-			$contentText = $content;
-		}
-
-		$html = Html::rawElement( 'div', [
-				'role' => 'navigation',
-				'class' => 'mw-portlet',
-				'id' => Sanitizer::escapeId( 'p-' . $name ),
-				'title' => Linker::titleAttrib( 'p-' . $name ),
-				'aria-labelledby' => $labelId
-			],
-			Html::rawElement( 'h3', [
-					'id' => $labelId,
-					'lang' => $this->get( 'userlang' ),
-					'dir' => $this->get( 'dir' )
-				],
-				$msgString
-			) .
-			Html::rawElement( 'div', [ 'class' => 'mw-portlet-body' ],
-				$contentText .
-				$this->renderAfterPortlet( $name )
-			)
-		);
-
-		return $html;
 	}
 
 	/**
@@ -408,10 +275,180 @@ class ExampleTemplate extends BaseTemplate {
 	}
 
 	/**
-	 * Outputs a css clear using the core visualClear class
+	 * Generates a block of navigation links with a header
+	 *
+	 * @param string $name
+	 * @param array|string $content array of links for use with makeListItem,
+	 * or a block of text
+	 * @param null|string|array|bool $msg
+	 *
 	 * @return string html
 	 */
-	protected function clear() {
+	protected function getPortlet( $name, $content, $msg = null ) {
+		if ( $msg === null ) {
+			$msg = $name;
+		} elseif ( is_array( $msg ) ) {
+			$msgString = array_shift( $msg );
+			$msgParams = $msg;
+			$msg = $msgString;
+		}
+		$msgObj = wfMessage( $msg );
+		if ( $msgObj->exists() ) {
+			if ( isset( $msgParams ) && !empty( $msgParams ) ) {
+				$msgString = $this->getMsg( $msg, $msgParams )->parse();
+			} else {
+				$msgString = $msgObj->parse();
+			}
+		} else {
+			$msgString = htmlspecialchars( $msg );
+		}
+
+		// HACK: Compatibility with extensions still using SkinTemplateToolboxEnd
+		$hookContents = '';
+		if ( $name == 'tb' ) {
+			if ( isset( $boxes['TOOLBOX'] ) ) {
+				ob_start();
+				// We pass an extra 'true' at the end so extensions using BaseTemplateToolbox
+				// can abort and avoid outputting double toolbox links
+				// Avoid PHP 7.1 warning from passing $this by reference
+				$template = $this;
+				Hooks::run( 'SkinTemplateToolboxEnd', [ &$template, true ] );
+				$hookContents = ob_get_contents();
+				ob_end_clean();
+				if ( !trim( $hookContents ) ) {
+					$hookContents = '';
+				}
+			}
+		}
+		// END hack
+
+		$labelId = Sanitizer::escapeId( "p-$name-label" );
+
+		if ( is_array( $content ) ) {
+			$contentText = Html::openElement( 'ul' );
+			foreach ( $content as $key => $item ) {
+				$contentText .= $this->makeListItem(
+					$key,
+					$item,
+					[ 'text-wrapper' => [ 'tag' => 'span' ] ]
+				);
+			}
+			// Add in SkinTemplateToolboxEnd, if any
+			$contentText .= $hookContents;
+			$contentText .= Html::closeElement( 'ul' );
+		} else {
+			$contentText = $content;
+		}
+
+		$html = Html::rawElement( 'div', [
+				'role' => 'navigation',
+				'class' => 'mw-portlet',
+				'id' => Sanitizer::escapeId( 'p-' . $name ),
+				'title' => Linker::titleAttrib( 'p-' . $name ),
+				'aria-labelledby' => $labelId
+			],
+			Html::rawElement( 'h3', [
+					'id' => $labelId,
+					'lang' => $this->get( 'userlang' ),
+					'dir' => $this->get( 'dir' )
+				],
+				$msgString
+			) .
+			Html::rawElement( 'div', [ 'class' => 'mw-portlet-body' ],
+				$contentText .
+				$this->getAfterPortlet( $name )
+			)
+		);
+
+		return $html;
+	}
+
+	/* DEPRECATED FUNCTIONS: remove if you're not intending to support versions of mw under their requirements */
+
+	/**
+	 * Get a div with the core visualClear class, for clearing floats
+	 *
+	 * @return string html
+	 * @since 1.29
+	 */
+	protected function getClear() {
 		return Html::element( 'div', [ 'class' => 'visualClear' ] );
+	}
+
+	/**
+	 * Renderer for getFooterIcons and getFooterLinks
+	 *
+	 * @param string $iconStyle $option for getFooterIcons: "icononly", "nocopyright"
+	 * @param string $linkStyle $option for getFooterLinks: "flat"
+	 *
+	 * @return string html
+	 * @since 1.29
+	 */
+	protected function getFooter( $iconStyle = 'icononly', $linkStyle = 'flat' ) {
+		$validFooterIcons = $this->getFooterIcons( $iconStyle );
+		$validFooterLinks = $this->getFooterLinks( $linkStyle );
+
+		$html = '';
+
+		if ( count( $validFooterIcons ) + count( $validFooterLinks ) > 0 ) {
+			$html .= Html::openElement( 'div', [
+				'id' => 'footer-bottom',
+				'role' => 'contentinfo',
+				'lang' => $this->get( 'userlang' ),
+				'dir' => $this->get( 'dir' )
+			] );
+			$footerEnd = Html::closeElement( 'div' );
+		} else {
+			$footerEnd = '';
+		}
+		foreach ( $validFooterIcons as $blockName => $footerIcons ) {
+			$html .= Html::openElement( 'div', [
+				'id' => 'f-' . Sanitizer::escapeId( $blockName ) . 'ico',
+				'class' => 'footer-icons'
+			] );
+			foreach ( $footerIcons as $icon ) {
+				$html .= $this->getSkin()->makeFooterIcon( $icon );
+			}
+			$html .= Html::closeElement( 'div' );
+		}
+		if ( count( $validFooterLinks ) > 0 ) {
+			$html .= Html::openElement( 'ul', [ 'id' => 'f-list', 'class' => 'footer-places' ] );
+			foreach ( $validFooterLinks as $aLink ) {
+				$html .= Html::rawElement(
+					'li',
+					[ 'id' => Sanitizer::escapeId( $aLink ) ],
+					$this->get( $aLink )
+				);
+			}
+			$html .= Html::closeElement( 'ul' );
+		}
+
+		$html .= $this->getClear() . $footerEnd;
+
+		return $html;
+	}
+
+	/**
+	 * Allows extensions to hook into known portlets and add stuff to them
+	 *
+	 * @param string $name
+	 *
+	 * @return string html
+	 * @since 1.29
+	 */
+	protected function getAfterPortlet( $name ) {
+		$html = '';
+		$content = '';
+		Hooks::run( 'BaseTemplateAfterPortlet', [ $this, $name, &$content ] );
+
+		if ( $content !== '' ) {
+			$html = Html::rawElement(
+				'div',
+				[ 'class' => [ 'after-portlet', 'after-portlet-' . $name ] ],
+				$content
+			);
+		}
+
+		return $html;
 	}
 }
