@@ -66,7 +66,7 @@ class ExampleTemplate extends BaseTemplate {
 					echo Html::closeElement( 'div' );
 
 					$this->html( 'bodycontent' );
-					$this->clear();
+					echo $this->clear();
 					echo Html::rawElement(
 						'div',
 						array( 'class' => 'printfooter' ),
@@ -154,7 +154,7 @@ class ExampleTemplate extends BaseTemplate {
 					}
 					echo Html::closeElement( 'ul' );
 				}
-				$this->clear();
+				echo $this->clear();
 				?>
 			</div>
 		</div>
@@ -167,36 +167,90 @@ class ExampleTemplate extends BaseTemplate {
 	}
 
 	/**
-	 * Generates a single sidebar portlet of any kind
+	 * Generates a block of navigation links with a header
+	 *
+	 * @param string $name
+	 * @param array|string $content array of links for use with makeListItem,
+	 * or a block of text
+	 * @param null|string|array|bool $msg
+	 *
 	 * @return string html
 	 */
-	private function getPortlet( $box ) {
-		if ( !$box['content'] ) {
-			return;
+	protected function getPortlet( $name, $content, $msg = null ) {
+		if ( $msg === null ) {
+			$msg = $name;
+		} elseif ( is_array( $msg ) ) {
+			$msgString = array_shift( $msg );
+			$msgParams = $msg;
+			$msg = $msgString;
+		}
+		$msgObj = wfMessage( $msg );
+		if ( $msgObj->exists() ) {
+			if ( isset( $msgParams ) && !empty( $msgParams ) ) {
+				$msgString = $this->getMsg( $msg, $msgParams )->parse();
+			} else {
+				$msgString = $msgObj->parse();
+			}
+		} else {
+			$msgString = htmlspecialchars( $msg );
 		}
 
-		$html = Html::openElement(
-			'div',
-			array(
+		// HACK: Compatibility with extensions still using SkinTemplateToolboxEnd
+		$hookContents = '';
+		if ( $name == 'tb' ) {
+			if ( isset( $boxes['TOOLBOX'] ) ) {
+				ob_start();
+				// We pass an extra 'true' at the end so extensions using BaseTemplateToolbox
+				// can abort and avoid outputting double toolbox links
+				// Avoid PHP 7.1 warning from passing $this by reference
+				$template = $this;
+				Hooks::run( 'SkinTemplateToolboxEnd', [ &$template, true ] );
+				$hookContents = ob_get_contents();
+				ob_end_clean();
+				if ( !trim( $hookContents ) ) {
+					$hookContents = '';
+				}
+			}
+		}
+		// END hack
+
+		$labelId = Sanitizer::escapeId( "p-$name-label" );
+
+		if ( is_array( $content ) ) {
+			$contentText = Html::openElement( 'ul' );
+			foreach ( $content as $key => $item ) {
+				$contentText .= $this->makeListItem(
+					$key,
+					$item,
+					[ 'text-wrapper' => [ 'tag' => 'span' ] ]
+				);
+			}
+			// Add in SkinTemplateToolboxEnd, if any
+			$contentText .= $hookContents;
+			$contentText .= Html::closeElement( 'ul' );
+		} else {
+			$contentText = $content;
+		}
+
+		$html = Html::rawElement( 'div', [
 				'role' => 'navigation',
 				'class' => 'mw-portlet',
-				'id' => Sanitizer::escapeId( $box['id'] )
-			) + Linker::tooltipAndAccesskeyAttribs( $box['id'] )
+				'id' => Sanitizer::escapeId( 'p-' . $name ),
+				'title' => Linker::titleAttrib( 'p-' . $name ),
+				'aria-labelledby' => $labelId
+			],
+			Html::rawElement( 'h3', [
+					'id' => $labelId,
+					'lang' => $this->get( 'userlang' ),
+					'dir' => $this->get( 'dir' )
+				],
+				$msgString
+			) .
+			Html::rawElement( 'div', [ 'class' => 'mw-portlet-body' ],
+				$contentText .
+				$this->renderAfterPortlet( $name )
+			)
 		);
-		$html .= Html::element(
-			'h3',
-			[],
-			isset( $box['headerMessage'] ) ? $this->getMsg( $box['headerMessage'] )->text() : $box['header'] );
-		if ( is_array( $box['content'] ) ) {
-			$html .= Html::openElement( 'ul' );
-			foreach ( $box['content'] as $key => $item ) {
-				$html .= $this->makeListItem( $key, $item );
-			}
-			$html .= Html::closeElement( 'ul' );
-		} else {
-			$html .= $box['content'];
-		}
-		$html .= Html::closeElement( 'div' );
 
 		return $html;
 	}
@@ -205,7 +259,7 @@ class ExampleTemplate extends BaseTemplate {
 	 * Generates the logo and (optionally) site title
 	 * @return string html
 	 */
-	private function getLogo( $id = 'p-logo', $imageOnly = false ) {
+	protected function getLogo( $id = 'p-logo', $imageOnly = false ) {
 		$html = Html::openElement(
 			'div',
 			array(
@@ -241,7 +295,7 @@ class ExampleTemplate extends BaseTemplate {
 	 * Generates the search form
 	 * @return string html
 	 */
-	private function getSearch() {
+	protected function getSearch() {
 		$html = Html::openElement(
 			'form',
 			array(
@@ -267,52 +321,76 @@ class ExampleTemplate extends BaseTemplate {
 	/**
 	 * Generates the sidebar
 	 * Set the elements to true to allow them to be part of the sidebar
+	 * Or get rid of this entirely, and take the specific bits to use wherever you actually want them
+	 *  * Toolbox is the page/site tools that appears under the sidebar in vector
+	 *  * Languages is the interlanguage links on the page via en:... es:... etc
+	 *  * Default is each user-specified box as defined on MediaWiki:Sidebar; you will still need a foreach loop
+	 *    to parse these.
 	 * @return string html
 	 */
-	private function getSiteNavigation() {
+	protected function getSiteNavigation() {
 		$html = '';
 
 		$sidebar = $this->getSidebar();
-
 		$sidebar['SEARCH'] = false;
 		$sidebar['TOOLBOX'] = true;
 		$sidebar['LANGUAGES'] = true;
 
-		foreach ( $sidebar as $boxName => $box ) {
-			if ( $boxName === false ) {
+		foreach ( $sidebar as $name => $content ) {
+			if ( $content === false ) {
 				continue;
 			}
-			$html .= $this->getPortlet( $box, true );
-		}
+			// Numeric strings gets an integer when set as key, cast back - T73639
+			$name = (string)$name;
 
+			switch ( $name ) {
+				case 'SEARCH':
+					$html .= $this->getSearch();
+					break;
+				case 'TOOLBOX':
+					$html .= $this->getPortlet( 'tb', $this->getToolbox(), 'toolbox', 'SkinTemplateToolboxEnd' );
+					break;
+				case 'LANGUAGES':
+					if ( $this->data['language_urls'] !== false ) {
+						$html .= $this->getPortlet( 'lang', $this->data['language_urls'], 'otherlanguages' );
+					}
+					break;
+				default:
+					$html .= $this->getPortlet( $name, $content['content'] );
+					break;
+			}
+		}
 		return $html;
 	}
 
 	/**
 	 * Generates page-related tools/links
+	 * You will probably want to split this up and move all of these to somewhere that makes sense for your skin.
 	 * @return string html
 	 */
-	private function getPageLinks() {
-		$html = $this->getPortlet( array(
-			'id' => 'p-namespaces',
-			'headerMessage' => 'namespaces',
-			'content' => $this->data['content_navigation']['namespaces'],
-		) );
-		$html .= $this->getPortlet( array(
-			'id' => 'p-variants',
-			'headerMessage' => 'variants',
-			'content' => $this->data['content_navigation']['variants'],
-		) );
-		$html .= $this->getPortlet( array(
-			'id' => 'p-views',
-			'headerMessage' => 'views',
-			'content' => $this->data['content_navigation']['views'],
-		) );
-		$html .= $this->getPortlet( array(
-			'id' => 'p-actions',
-			'headerMessage' => 'actions',
-			'content' => $this->data['content_navigation']['actions'],
-		) );
+	protected function getPageLinks() {
+		// Namespaces: links for 'content' and 'talk' for namespaces with talkpages. Otherwise is just the content.
+		// Usually rendered as tabs on the top of the page.
+		$html = $this->getPortlet(
+			'namespaces',
+			$this->data['content_navigation']['namespaces']
+		);
+		// Variants: Language variants. Displays list for converting between different scripts in the same language,
+		// if using a language where this is applicable.
+		$html .= $this->getPortlet(
+			'variants',
+			$this->data['content_navigation']['variants']
+		);
+		// 'View' actions for the page: view, edit, view history, etc
+		$html .= $this->getPortlet(
+			'views',
+			$this->data['content_navigation']['views']
+		);
+		// Other actions for the page: move, delete, protect, everything else
+		$html .= $this->getPortlet(
+			'actions',
+			$this->data['content_navigation']['actions']
+		);
 
 		return $html;
 	}
@@ -321,18 +399,19 @@ class ExampleTemplate extends BaseTemplate {
 	 * Generates user tools menu
 	 * @return string html
 	 */
-	private function getUserLinks() {
-		return $this->getPortlet( array(
-			'id' => 'p-personal',
-			'headerMessage' => 'personaltools',
-			'content' => $this->getPersonalTools(),
-		) );
+	protected function getUserLinks() {
+		return $this->getPortlet(
+			'personal',
+			$this->getPersonalTools(),
+			'personaltools'
+		);
 	}
 
 	/**
 	 * Outputs a css clear using the core visualClear class
+	 * @return string html
 	 */
-	private function clear() {
-		echo '<div class="visualClear"></div>';
+	protected function clear() {
+		return Html::element( 'div', [ 'class' => 'visualClear' ] );
 	}
 }
