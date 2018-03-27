@@ -6,7 +6,7 @@
  */
 class SkinExample extends SkinTemplate {
 	public $skinname = 'example', $stylename = 'Example',
-		$template = 'ExampleTemplate', $useHeadElement = true;
+		$template = 'ExampleTemplate';
 
 	/**
 	 * Add CSS via ResourceLoader
