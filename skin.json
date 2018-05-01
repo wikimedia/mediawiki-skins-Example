@@ -47,8 +47,8 @@
 		"remoteSkinPath": "Example"
 	},
 	"AutoloadClasses": {
-		"SkinExample": "Example.skin.php",
-		"ExampleTemplate": "ExampleTemplate.php"
+		"SkinExample": "includes/SkinExample.php",
+		"ExampleTemplate": "includes/ExampleTemplate.php"
 	},
 	"manifest_version": 1
 }
