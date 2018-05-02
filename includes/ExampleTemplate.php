@@ -176,7 +176,7 @@ class ExampleTemplate extends BaseTemplate {
 					$html .= $this->getSearch();
 					break;
 				case 'TOOLBOX':
-					$html .= $this->getPortlet( 'tb', $this->getToolbox(), 'toolbox', 'SkinTemplateToolboxEnd' );
+					$html .= $this->getPortlet( 'tb', $this->getToolbox(), 'toolbox' );
 					break;
 				case 'LANGUAGES':
 					if ( $this->data['language_urls'] !== false ) {
