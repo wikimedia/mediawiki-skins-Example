@@ -21,14 +21,14 @@ class SkinExample extends SkinTemplate {
 			'user-scalable=yes, minimum-scale=0.25, maximum-scale=5.0'
 		);
 
-		$out->addModuleStyles( array(
+		$out->addModuleStyles( [
 			'mediawiki.skinning.interface',
 			'mediawiki.skinning.content.externallinks',
 			'skins.example'
-		) );
-		$out->addModules( array(
+		] );
+		$out->addModules( [
 			'skins.example.js'
-		) );
+		] );
 	}
 
 	/**
