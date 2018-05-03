@@ -109,7 +109,7 @@ class ExampleTemplate extends BaseTemplate {
 				[
 					'id' => 'p-banner',
 					'class' => 'mw-wiki-title',
-					'href'=> $this->data['nav_urls']['mainpage']['href']
+					'href' => $this->data['nav_urls']['mainpage']['href']
 				] + Linker::tooltipAndAccesskeyAttribs( 'p-logo' ),
 				$this->getMsg( 'sitetitle' )->escaped()
 			);

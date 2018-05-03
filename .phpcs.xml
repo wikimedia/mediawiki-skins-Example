@@ -5,7 +5,6 @@
 		<exclude name="MediaWiki.Commenting.FunctionComment.MissingParamName" />
 		<exclude name="MediaWiki.Commenting.FunctionComment.MissingParamTag" />
 		<exclude name="Squiz.Scope.MethodScope.Missing" />
-		<exclude name="Squiz.WhiteSpace.OperatorSpacing.NoSpaceBefore" />
 	</rule>
 	<file>.</file>
 	<arg name="extensions" value="php,php5,inc"/>
