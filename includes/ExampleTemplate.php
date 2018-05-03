@@ -30,7 +30,7 @@ class ExampleTemplate extends BaseTemplate {
 				Html::rawElement( 'div', [ 'class' => 'mw-body-content' ],
 					Html::rawElement( 'div', [ 'id' => 'contentSub' ],
 						$this->getPageSubtitle() .
-						Html::rawelement (
+						Html::rawelement(
 							'p',
 							[],
 							$this->get( 'undelete' )
@@ -271,7 +271,7 @@ class ExampleTemplate extends BaseTemplate {
 	 */
 	protected function getPageSubtitle() {
 		if ( $this->data['subtitle'] ) {
-			return Html::rawelement (
+			return Html::rawelement(
 				'p',
 				[],
 				$this->get( 'subtitle' )
@@ -279,7 +279,6 @@ class ExampleTemplate extends BaseTemplate {
 		}
 		return '';
 	}
-
 
 	/**
 	 * Generates category links, if any
