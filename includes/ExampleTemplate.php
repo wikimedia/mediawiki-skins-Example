@@ -30,7 +30,7 @@ class ExampleTemplate extends BaseTemplate {
 				Html::rawElement( 'div', [ 'class' => 'mw-body-content' ],
 					Html::rawElement( 'div', [ 'id' => 'contentSub' ],
 						$this->getPageSubtitle() .
-						Html::rawelement(
+						Html::rawElement(
 							'p',
 							[],
 							$this->get( 'undelete' )
@@ -134,7 +134,7 @@ class ExampleTemplate extends BaseTemplate {
 			]
 		);
 		$html .= Html::hidden( 'title', htmlspecialchars( $this->get( 'searchtitle' ) ) );
-		$html .= Html::rawelement(
+		$html .= Html::rawElement(
 			'h3',
 			[],
 			Html::label( $this->getMsg( 'search' )->escaped(), 'searchInput' )
@@ -271,7 +271,7 @@ class ExampleTemplate extends BaseTemplate {
 	 */
 	protected function getPageSubtitle() {
 		if ( $this->data['subtitle'] ) {
-			return Html::rawelement(
+			return Html::rawElement(
 				'p',
 				[],
 				$this->get( 'subtitle' )
