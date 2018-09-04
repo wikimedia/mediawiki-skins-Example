@@ -111,7 +111,7 @@ class ExampleTemplate extends BaseTemplate {
 					'class' => 'mw-wiki-title',
 					'href' => $this->data['nav_urls']['mainpage']['href']
 				] + Linker::tooltipAndAccesskeyAttribs( 'p-logo' ),
-				$this->getMsg( 'sitetitle' )->escaped()
+				$this->getMsg( 'sitetitle' )->text()
 			);
 		}
 		$html .= Html::closeElement( 'div' );
