@@ -5,9 +5,9 @@
  * @ingroup Skins
  */
 class SkinExample extends SkinTemplate {
-	public $skinname = 'example';
-	public $stylename = 'Example';
-	public $template = 'ExampleTemplate';
+	public $skinname = 'example',
+		$stylename = 'Example',
+		$template = 'ExampleTemplate';
 
 	/**
 	 * Add CSS via ResourceLoader

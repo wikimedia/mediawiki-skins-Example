@@ -133,7 +133,7 @@ class ExampleTemplate extends BaseTemplate {
 				'id' => 'p-search'
 			]
 		);
-		$html .= Html::hidden( 'title', htmlspecialchars( $this->get( 'searchtitle' ) ) );
+		$html .= Html::hidden( 'title', $this->get( 'searchtitle' ) );
 		$html .= Html::rawElement(
 			'h3',
 			[],
