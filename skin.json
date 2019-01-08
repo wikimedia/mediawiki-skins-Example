@@ -7,6 +7,9 @@
 	"namemsg": "skinname-example",
 	"license-name": "CC0-1.0",
 	"type": "skin",
+	"requires": {
+		"MediaWiki": ">= 1.29.0"
+	},
 	"ValidSkinNames": {
 		"example": "Example"
 	},
