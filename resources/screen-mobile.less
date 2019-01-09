@@ -29,6 +29,10 @@ div.thumb {
 	margin: 1em auto;
 }
 
+.thumbinner {
+	width: 100% !important; // stylelint-disable-line declaration-no-important
+}
+
 div.tright {
 	margin-left: 0;
 
@@ -45,10 +49,6 @@ div.tleft {
 	}
 }
 
-.thumbinner {
-	width: 100% !important;
-}
-
 .thumbimage {
 	display: block;
 	margin: 0 auto 0.5em;
@@ -56,8 +56,8 @@ div.tleft {
 
 // Keep images from overflowing
 .mw-body-content a > img {
-	height: auto !important;
-	max-width: 100% !important;
+	height: auto !important; // stylelint-disable-line declaration-no-important
+	max-width: 100% !important; // stylelint-disable-line declaration-no-important
 }
 
 .nomobile {
