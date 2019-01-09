@@ -14,8 +14,14 @@ class ExampleTemplate extends BaseTemplate {
 
 		$html .= Html::rawElement( 'div', [ 'id' => 'mw-wrapper' ],
 			Html::rawElement( 'div', [ 'class' => 'mw-body', 'role' => 'main' ],
-				$this->getSiteNotice() .
-				$this->getNewTalk() .
+				$this->getIfExists( 'sitenotice', [
+					'wrapper' => 'div',
+					'parameters' => [ 'id' => 'siteNotice' ]
+				] ) .
+				$this->getIfExists( 'newtalk', [
+					'wrapper' => 'div',
+					'parameters' => [ 'class' => 'usermessage' ]
+				] ) .
 				$this->getIndicators() .
 				Html::rawElement( 'h1',
 					[
@@ -29,7 +35,7 @@ class ExampleTemplate extends BaseTemplate {
 				) .
 				Html::rawElement( 'div', [ 'class' => 'mw-body-content' ],
 					Html::rawElement( 'div', [ 'id' => 'contentSub' ],
-						$this->getPageSubtitle() .
+						$this->getIfExists( 'subtitle', [ 'wrapper' => 'p' ] ) .
 						Html::rawElement(
 							'p',
 							[],
@@ -41,8 +47,8 @@ class ExampleTemplate extends BaseTemplate {
 					Html::rawElement( 'div', [ 'class' => 'printfooter' ],
 						$this->get( 'printfooter' )
 					) .
-					$this->getCategoryLinks() .
-					$this->getDataAfterContent() .
+					$this->getIfExists( 'catlinks' ) .
+					$this->getIfExists( 'dataAfterContent' ) .
 					$this->get( 'debughtml' )
 				)
 			) .
@@ -73,7 +79,7 @@ class ExampleTemplate extends BaseTemplate {
 					$this->getSiteNavigation()
 				)
 			) .
-			$this->getFooter()
+			$this->getFooterBlock()
 		);
 
 		$html .= $this->getTrail();
@@ -85,6 +91,10 @@ class ExampleTemplate extends BaseTemplate {
 
 	/**
 	 * Generates the logo and (optionally) site title
+	 * @param string $id
+	 * @param bool $imageOnly Whether or not to generate the logo with only the image,
+	 * or with a text link as well
+	 *
 	 * @return string html
 	 */
 	protected function getLogo( $id = 'p-logo', $imageOnly = false ) {
@@ -236,83 +246,66 @@ class ExampleTemplate extends BaseTemplate {
 	}
 
 	/**
-	 * Generates siteNotice, if any
+	 * Simple wrapper for random if-statement-wrapped $this->data things
+	 *
+	 * @param string $object name of thing
+	 * @param array $setOptions
+	 *
 	 * @return string html
 	 */
-	protected function getSiteNotice() {
-		if ( $this->data['sitenotice'] ) {
-			return Html::rawElement(
-				'div',
-				[ 'id' => 'siteNotice' ],
-				$this->get( 'sitenotice' )
-			);
-		}
-		return '';
-	}
+	protected function getIfExists( $object, $setOptions = [] ) {
+		$options = $setOptions + [
+			'wrapper' => 'none',
+			'parameters' => []
+		];
 
-	/**
-	 * Generates new talk message banner, if any
-	 * @return string html
-	 */
-	protected function getNewTalk() {
-		if ( $this->data['newtalk'] ) {
-			return Html::rawElement(
-				'div',
-				[ 'class' => 'usermessage' ],
-				$this->get( 'newtalk' )
-			);
-		}
-		return '';
-	}
+		$html = '';
 
-	/**
-	 * Generates subtitle stuff, if any
-	 * @return string html
-	 */
-	protected function getPageSubtitle() {
-		if ( $this->data['subtitle'] ) {
-			return Html::rawElement(
-				'p',
-				[],
-				$this->get( 'subtitle' )
-			);
+		if ( $this->data[$object] ) {
+			if ( $options['wrapper'] == 'none' ) {
+				$html .= $this->get( $object );
+			} else {
+				$html .= Html::rawElement(
+					$options['wrapper'],
+					$options['parameters'],
+					$this->get( $object )
+				);
+			}
 		}
-		return '';
-	}
 
-	/**
-	 * Generates category links, if any
-	 * @return string html
-	 */
-	protected function getCategoryLinks() {
-		if ( $this->data['catlinks'] ) {
-			return $this->get( 'catlinks' );
-		}
-		return '';
-	}
-
-	/**
-	 * Generates data after content stuff, if any
-	 * @return string html
-	 */
-	protected function getDataAfterContent() {
-		if ( $this->data['dataAfterContent'] ) {
-			return $this->get( 'dataAfterContent' );
-		}
-		return '';
+		return $html;
 	}
 
 	/**
 	 * Generates a block of navigation links with a header
 	 *
 	 * @param string $name
-	 * @param array|string $content array of links for use with makeListItem,
-	 * or a block of text
-	 * @param null|string|array|bool $msg
+	 * @param array|string $content array of links for use with makeListItem, or a block of text
+	 * @param null|string|array $msg
+	 * @param array $setOptions random crap to rename/do/whatever
 	 *
 	 * @return string html
 	 */
-	protected function getPortlet( $name, $content, $msg = null ) {
+	protected function getPortlet( $name, $content, $msg = null, $setOptions = [] ) {
+		// random stuff to override with any provided options
+		$options = $setOptions + [
+			// extra classes/ids
+			'id' => 'p-' . $name,
+			'class' => 'mw-portlet',
+			'extra-classes' => '',
+			// what to wrap the body list in, if anything
+			'body-wrapper' => 'div',
+			'body-id' => null,
+			'body-class' => 'mw-portlet-body',
+			// makeListItem options
+			'list-item' => [ 'text-wrapper' => [ 'tag' => 'span' ] ],
+			// option to stick arbitrary stuff at the beginning of the ul
+			'list-prepend' => '',
+			// old toolbox hook support (use: [ 'SkinTemplateToolboxEnd' => [ &$skin, true ] ])
+			'hooks' => ''
+		];
+
+		// Handle the different $msg possibilities
 		if ( $msg === null ) {
 			$msg = $name;
 		} elseif ( is_array( $msg ) ) {
@@ -320,7 +313,7 @@ class ExampleTemplate extends BaseTemplate {
 			$msgParams = $msg;
 			$msg = $msgString;
 		}
-		$msgObj = wfMessage( $msg );
+		$msgObj = $this->getMsg( $msg );
 		if ( $msgObj->exists() ) {
 			if ( isset( $msgParams ) && !empty( $msgParams ) ) {
 				$msgString = $this->getMsg( $msg, $msgParams )->parse();
@@ -331,167 +324,199 @@ class ExampleTemplate extends BaseTemplate {
 			$msgString = htmlspecialchars( $msg );
 		}
 
-		// HACK: Compatibility with extensions still using SkinTemplateToolboxEnd
-		$hookContents = '';
-		if ( $name == 'tb' ) {
-			if ( isset( $boxes['TOOLBOX'] ) ) {
-				ob_start();
-				// We pass an extra 'true' at the end so extensions using BaseTemplateToolbox
-				// can abort and avoid outputting double toolbox links
-				// Avoid PHP 7.1 warning from passing $this by reference
-				$template = $this;
-				Hooks::run( 'SkinTemplateToolboxEnd', [ &$template, true ] );
-				$hookContents = ob_get_contents();
-				ob_end_clean();
-				if ( !trim( $hookContents ) ) {
-					$hookContents = '';
-				}
-			}
-		}
-		// END hack
-
-		$labelId = Sanitizer::escapeId( "p-$name-label" );
+		$labelId = Sanitizer::escapeIdForAttribute( "p-$name-label" );
 
 		if ( is_array( $content ) ) {
-			$contentText = Html::openElement( 'ul' );
+			$contentText = Html::openElement( 'ul',
+				[ 'lang' => $this->get( 'userlang' ), 'dir' => $this->get( 'dir' ) ]
+			);
+			$contentText .= $options['list-prepend'];
 			foreach ( $content as $key => $item ) {
-				$contentText .= $this->makeListItem(
-					$key,
-					$item,
-					[ 'text-wrapper' => [ 'tag' => 'span' ] ]
-				);
+				$contentText .= $this->makeListItem( $key, $item, $options['list-item'] );
 			}
-			// Add in SkinTemplateToolboxEnd, if any
-			$contentText .= $hookContents;
+			// Compatibility with extensions still using SkinTemplateToolboxEnd or similar
+			if ( is_array( $options['hooks'] ) ) {
+				foreach ( $options['hooks'] as $hook ) {
+					if ( is_string( $hook ) ) {
+						$hookOptions = [];
+					} else {
+						// it should only be an array otherwise
+						$hookOptions = array_values( $hook )[0];
+						$hook = array_keys( $hook )[0];
+					}
+					$contentText .= $this->deprecatedHookHack( $hook, $hookOptions );
+				}
+			}
+
 			$contentText .= Html::closeElement( 'ul' );
 		} else {
 			$contentText = $content;
 		}
 
-		$html = Html::rawElement( 'div', [
-				'role' => 'navigation',
-				'class' => 'mw-portlet',
-				'id' => Sanitizer::escapeId( 'p-' . $name ),
-				'title' => Linker::titleAttrib( 'p-' . $name ),
-				'aria-labelledby' => $labelId
-			],
-			Html::rawElement( 'h3', [
-					'id' => $labelId,
-					'lang' => $this->get( 'userlang' ),
-					'dir' => $this->get( 'dir' )
-				],
-				$msgString
-			) .
-			Html::rawElement( 'div', [ 'class' => 'mw-portlet-body' ],
+		// Special handling for role=search and other weird things
+		$divOptions = [
+			'role' => 'navigation',
+			'id' => Sanitizer::escapeIdForAttribute( $options['id'] ),
+			'title' => Linker::titleAttrib( $options['id'] ),
+			'aria-labelledby' => $labelId
+		];
+		if ( !is_array( $options['class'] ) ) {
+			$class = [ $options['class'] ];
+		}
+		if ( !is_array( $options['extra-classes'] ) ) {
+			$extraClasses = [ $options['extra-classes'] ];
+		}
+		$divOptions['class'] = array_merge( $class, $extraClasses );
+
+		$labelOptions = [
+			'id' => $labelId,
+			'lang' => $this->get( 'userlang' ),
+			'dir' => $this->get( 'dir' )
+		];
+
+		if ( $options['body-wrapper'] !== 'none' ) {
+			$bodyDivOptions = [ 'class' => $options['body-class'] ];
+			if ( is_string( $options['body-id'] ) ) {
+				$bodyDivOptions['id'] = $options['body-id'];
+			}
+			$body = Html::rawElement( $options['body-wrapper'], $bodyDivOptions,
 				$contentText .
 				$this->getAfterPortlet( $name )
-			)
+			);
+		} else {
+			$body = $contentText . $this->getAfterPortlet( $name );
+		}
+
+		$html = Html::rawElement( 'div', $divOptions,
+			Html::rawElement( 'h3', $labelOptions, $msgString ) .
+			$body
 		);
 
 		return $html;
 	}
 
-	/* DEPRECATED FUNCTIONS: remove if you're not intending to support versions of mw under their requirements */
-
 	/**
-	 * Get a div with the core visualClear class, for clearing floats
+	 * Wrapper to catch output of old hooks expecting to write directly to page
+	 * We no longer do things that way.
+	 *
+	 * @param string $hook event
+	 * @param array $hookOptions args
 	 *
 	 * @return string html
-	 * @since 1.29
 	 */
-	protected function getClear() {
-		return Html::element( 'div', [ 'class' => 'visualClear' ] );
+	protected function deprecatedHookHack( $hook, $hookOptions = [] ) {
+		$hookContents = '';
+		ob_start();
+		Hooks::run( $hook, $hookOptions );
+		$hookContents = ob_get_contents();
+		ob_end_clean();
+		if ( !trim( $hookContents ) ) {
+			$hookContents = '';
+		}
+
+		return $hookContents;
 	}
 
 	/**
-	 * Renderer for getFooterIcons and getFooterLinks
+	 * Better renderer for getFooterIcons and getFooterLinks, based on Vector
 	 *
-	 * @param string $iconStyle $option for getFooterIcons: "icononly", "nocopyright"
-	 * @param string $linkStyle $option for getFooterLinks: "flat"
+	 * @param array $setOptions Miscellaneous other options
+	 * * 'id' for footer id
+	 * * 'order' to determine whether icons or links appear first: 'iconsfirst' or links, though in
+	 *   practice we currently only check if it is or isn't 'iconsfirst'
+	 * * 'link-prefix' to set the prefix for all link and block ids; most skins use 'f' or 'footer',
+	 *   as in id='f-whatever' vs id='footer-whatever'
+	 * * 'icon-style' to pass to getFooterIcons: "icononly", "nocopyright"
+	 * * 'link-style' to pass to getFooterLinks: "flat" to disable categorisation of links in a
+	 *   nested array
 	 *
 	 * @return string html
-	 * @since 1.29
 	 */
-	protected function getFooter( $iconStyle = 'icononly', $linkStyle = 'flat' ) {
-		$validFooterIcons = $this->getFooterIcons( $iconStyle );
-		$validFooterLinks = $this->getFooterLinks( $linkStyle );
+	protected function getFooterBlock( $setOptions = [] ) {
+		// Set options and fill in defaults
+		$options = $setOptions + [
+			'id' => 'footer',
+			'order' => 'iconsfirst',
+			'link-prefix' => 'footer',
+			'icon-style' => 'icononly',
+			'link-style' => null
+		];
+
+		$validFooterIcons = $this->getFooterIcons( $options['icon-style'] );
+		$validFooterLinks = $this->getFooterLinks( $options['link-style'] );
 
 		$html = '';
 
-		if ( count( $validFooterIcons ) + count( $validFooterLinks ) > 0 ) {
-			$html .= Html::openElement( 'div', [
-				'id' => 'footer-bottom',
-				'role' => 'contentinfo',
-				'lang' => $this->get( 'userlang' ),
-				'dir' => $this->get( 'dir' )
-			] );
-			$footerEnd = Html::closeElement( 'div' );
-		} else {
-			$footerEnd = '';
-		}
-		foreach ( $validFooterIcons as $blockName => $footerIcons ) {
-			$html .= Html::openElement( 'div', [
-				'id' => 'f-' . Sanitizer::escapeId( $blockName ) . 'ico',
-				'class' => 'footer-icons'
-			] );
-			foreach ( $footerIcons as $icon ) {
-				$html .= $this->getSkin()->makeFooterIcon( $icon );
+		$html .= Html::openElement( 'div', [
+			'id' => $options['id'],
+			'role' => 'contentinfo',
+			'lang' => $this->get( 'userlang' ),
+			'dir' => $this->get( 'dir' )
+		] );
+
+		$iconsHTML = '';
+		if ( count( $validFooterIcons ) > 0 ) {
+			$iconsHTML .= Html::openElement( 'ul', [ 'id' => "{$options['link-prefix']}-icons" ] );
+			foreach ( $validFooterIcons as $blockName => $footerIcons ) {
+				$iconsHTML .= Html::openElement( 'li', [
+					'id' => Sanitizer::escapeIdForAttribute(
+						"{$options['link-prefix']}-{$blockName}ico"
+					),
+					'class' => 'footer-icons'
+				] );
+				foreach ( $footerIcons as $icon ) {
+					$iconsHTML .= $this->getSkin()->makeFooterIcon( $icon );
+				}
+				$iconsHTML .= Html::closeElement( 'li' );
 			}
-			$html .= Html::closeElement( 'div' );
+			$iconsHTML .= Html::closeElement( 'ul' );
 		}
+
+		$linksHTML = '';
 		if ( count( $validFooterLinks ) > 0 ) {
-			$html .= Html::openElement( 'ul', [ 'id' => 'f-list', 'class' => 'footer-places' ] );
-			foreach ( $validFooterLinks as $aLink ) {
-				$html .= Html::rawElement(
-					'li',
-					[ 'id' => Sanitizer::escapeId( $aLink ) ],
-					$this->get( $aLink )
-				);
+			if ( $options['link-style'] == 'flat' ) {
+				$linksHTML .= Html::openElement( 'ul', [
+					'id' => "{$options['link-prefix']}-list",
+					'class' => 'footer-places'
+				] );
+				foreach ( $validFooterLinks as $link ) {
+					$linksHTML .= Html::rawElement(
+						'li',
+						[ 'id' => Sanitizer::escapeIdForAttribute( $link ) ],
+						$this->get( $link )
+					);
+				}
+				$linksHTML .= Html::closeElement( 'ul' );
+			} else {
+				$linksHTML .= Html::openElement( 'div', [ 'id' => "{$options['link-prefix']}-list" ] );
+				foreach ( $validFooterLinks as $category => $links ) {
+					$linksHTML .= Html::openElement( 'ul',
+						[ 'id' => Sanitizer::escapeIdForAttribute(
+							"{$options['link-prefix']}-{$category}"
+						) ]
+					);
+					foreach ( $links as $link ) {
+						$linksHTML .= Html::rawElement(
+							'li',
+							[ 'id' => Sanitizer::escapeIdForAttribute(
+								"{$options['link-prefix']}-{$category}-{$link}"
+							) ],
+							$this->get( $link )
+						);
+					}
+					$linksHTML .= Html::closeElement( 'ul' );
+				}
+				$linksHTML .= Html::closeElement( 'div' );
 			}
-			$html .= Html::closeElement( 'ul' );
 		}
 
-		$html .= $this->getClear() . $footerEnd;
-
-		return $html;
-	}
-
-	/**
-	 * Allows extensions to hook into known portlets and add stuff to them
-	 *
-	 * @param string $name
-	 *
-	 * @return string html
-	 * @since 1.29
-	 */
-	protected function getAfterPortlet( $name ) {
-		$html = '';
-		$content = '';
-		Hooks::run( 'BaseTemplateAfterPortlet', [ $this, $name, &$content ] );
-
-		if ( $content !== '' ) {
-			$html = Html::rawElement(
-				'div',
-				[ 'class' => [ 'after-portlet', 'after-portlet-' . $name ] ],
-				$content
-			);
+		if ( $options['order'] == 'iconsfirst' ) {
+			$html .= $iconsHTML . $linksHTML;
+		} else {
+			$html .= $linksHTML . $iconsHTML;
 		}
 
-		return $html;
-	}
-
-	/**
-	 * Get the basic end-page trail including bottomscripts, reporttime, and
-	 * debug stuff. This should be called right before outputting the closing
-	 * body and html tags.
-	 *
-	 * @return string
-	 * @since 1.29
-	 */
-	function getTrail() {
-		$html = MWDebug::getDebugHTML( $this->getSkin()->getContext() );
-		$html .= $this->get( 'bottomscripts' );
-		$html .= $this->get( 'reporttime' );
+		$html .= $this->getClear() . Html::closeElement( 'div' );
 
 		return $html;
 	}
