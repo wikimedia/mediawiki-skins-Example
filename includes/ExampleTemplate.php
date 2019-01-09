@@ -238,11 +238,60 @@ class ExampleTemplate extends BaseTemplate {
 	 * @return string html
 	 */
 	protected function getUserLinks() {
+		// Basic list output
 		return $this->getPortlet(
 			'personal',
 			$this->getPersonalTools(),
 			'personaltools'
 		);
+
+		// If your skin uses a dropdown or similar for the user links,
+		// consider uncommenting and using the following instead for compatibility
+		// with certain extensions (Echo especially):
+		/*
+		$personalTools = $this->getPersonalTools();
+
+		$html = '';
+
+		// Move Echo badges out of default list - they should be visible outside of dropdown;
+		// may not even work at all inside one
+		$extraTools = [];
+		if ( isset( $personalTools['notifications-alert'] ) ) {
+			$extraTools['notifications-alert'] = $personalTools['notifications-alert'];
+			unset( $personalTools['notifications-alert'] );
+		}
+		if ( isset( $personalTools['notifications-notice'] ) ) {
+			$extraTools['notifications-notice'] = $personalTools['notifications-notice'];
+			unset( $personalTools['notifications-notice'] );
+		}
+		// Move ULS trigger if you want to better support the user options trigger
+		// if ( isset( $personalTools['uls'] ) ) {
+		//	$extraTools['uls'] = $personalTools['uls'];
+		//	unset( $personalTools['uls'] );
+		// }
+
+		$html .= Html::openElement( 'div', [ 'id' => 'mw-user-links' ] );
+
+		// Place the extra icons/outside stuff
+		if ( !empty( $extraTools ) ) {
+			$iconList = '';
+			foreach ( $extraTools as $key => $item ) {
+				$iconList .= $this->makeListItem( $key, $item );
+			}
+
+			$html .= Html::rawElement(
+				'div',
+				[ 'id' => 'p-personal-extra', 'class' => 'p-body' ],
+				Html::rawElement( 'ul', [], $iconList )
+			);
+		}
+
+		$html .= $this->getPortlet( 'personal', $personalTools, 'personaltools' );
+
+		$html .= Html::closeElement( 'div' );
+
+		return $html;
+		*/
 	}
 
 	/**

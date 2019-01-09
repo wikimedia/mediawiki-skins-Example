@@ -49,6 +49,11 @@
 		"localBasePath": "",
 		"remoteSkinPath": "Example"
 	},
+	"ResourceModuleSkinStyles": {
+		"example": {
+			"+ext.echo.styles.badge": "resources/extensions/echo.styles.badge.less"
+		}
+	},
 	"AutoloadClasses": {
 		"SkinExample": "includes/SkinExample.php",
 		"ExampleTemplate": "includes/ExampleTemplate.php"
