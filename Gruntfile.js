@@ -31,7 +31,8 @@ module.exports = function ( grunt ) {
 				'*.{less,css}',
 				'**/*.{less,css}',
 				'!node_modules/**',
-				'!resources/libraries/**'
+				'!resources/libraries/**',
+				'!vendor/**'
 			]
 		}
 	} );
