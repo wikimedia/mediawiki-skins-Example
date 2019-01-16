@@ -13,7 +13,7 @@ class ExampleTemplate extends BaseTemplate {
 		$html .= $this->get( 'headelement' );
 
 		$html .= Html::rawElement( 'div', [ 'id' => 'mw-wrapper' ],
-			Html::rawElement( 'div', [ 'class' => 'mw-body', 'role' => 'main' ],
+			Html::rawElement( 'div', [ 'class' => 'mw-body', 'id' => 'content', 'role' => 'main' ],
 				$this->getIfExists( 'sitenotice', [
 					'wrapper' => 'div',
 					'parameters' => [ 'id' => 'siteNotice' ]
@@ -47,10 +47,10 @@ class ExampleTemplate extends BaseTemplate {
 					Html::rawElement( 'div', [ 'class' => 'printfooter' ],
 						$this->get( 'printfooter' )
 					) .
-					$this->getIfExists( 'catlinks' ) .
-					$this->getIfExists( 'dataAfterContent' ) .
-					$this->get( 'debughtml' )
-				)
+					$this->getIfExists( 'catlinks' )
+				) .
+				$this->getIfExists( 'dataAfterContent' ) .
+				$this->get( 'debughtml' )
 			) .
 			Html::rawElement( 'div', [ 'id' => 'mw-navigation' ],
 				Html::rawElement(
