@@ -14,14 +14,8 @@ class ExampleTemplate extends BaseTemplate {
 
 		$html .= Html::rawElement( 'div', [ 'id' => 'mw-wrapper' ],
 			Html::rawElement( 'div', [ 'class' => 'mw-body', 'id' => 'content', 'role' => 'main' ],
-				$this->getIfExists( 'sitenotice', [
-					'wrapper' => 'div',
-					'parameters' => [ 'id' => 'siteNotice' ]
-				] ) .
-				$this->getIfExists( 'newtalk', [
-					'wrapper' => 'div',
-					'parameters' => [ 'class' => 'usermessage' ]
-				] ) .
+				$this->getSiteNotice() .
+				$this->getNewTalk() .
 				$this->getIndicators() .
 				Html::rawElement( 'h1',
 					[
@@ -35,7 +29,7 @@ class ExampleTemplate extends BaseTemplate {
 				) .
 				Html::rawElement( 'div', [ 'class' => 'mw-body-content' ],
 					Html::rawElement( 'div', [ 'id' => 'contentSub' ],
-						$this->getIfExists( 'subtitle', [ 'wrapper' => 'p' ] ) .
+						$this->getPageSubtitle() .
 						Html::rawElement(
 							'p',
 							[],
@@ -47,9 +41,9 @@ class ExampleTemplate extends BaseTemplate {
 					Html::rawElement( 'div', [ 'class' => 'printfooter' ],
 						$this->get( 'printfooter' )
 					) .
-					$this->getIfExists( 'catlinks' )
+					$this->getCategoryLinks()
 				) .
-				$this->getIfExists( 'dataAfterContent' ) .
+				$this->getDataAfterContent() .
 				$this->get( 'debughtml' )
 			) .
 			Html::rawElement( 'div', [ 'id' => 'mw-navigation' ],
@@ -295,6 +289,52 @@ class ExampleTemplate extends BaseTemplate {
 
 		return $html;
 		*/
+	}
+
+	/**
+	 * Generates siteNotice, if any
+	 * @return string html
+	 */
+	protected function getSiteNotice() {
+		return $this->getIfExists( 'sitenotice', [
+			'wrapper' => 'div',
+			'parameters' => [ 'id' => 'siteNotice' ]
+		] );
+	}
+
+	/**
+	 * Generates new talk message banner, if any
+	 * @return string html
+	 */
+	protected function getNewTalk() {
+		return $this->getIfExists( 'newtalk', [
+			'wrapper' => 'div',
+			'parameters' => [ 'class' => 'usermessage' ]
+		] );
+	}
+
+	/**
+	 * Generates subtitle stuff, if any
+	 * @return string html
+	 */
+	protected function getPageSubtitle() {
+		return $this->getIfExists( 'subtitle', [ 'wrapper' => 'p' ] );
+	}
+
+	/**
+	 * Generates category links, if any
+	 * @return string html
+	 */
+	protected function getCategoryLinks() {
+		return $this->getIfExists( 'catlinks' );
+	}
+
+	/**
+	 * Generates data after content stuff, if any
+	 * @return string html
+	 */
+	protected function getDataAfterContent() {
+		return $this->getIfExists( 'dataAfterContent' );
 	}
 
 	/**
