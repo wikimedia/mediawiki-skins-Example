@@ -114,14 +114,17 @@ class ExampleTemplate extends BaseTemplate {
 			] + Linker::tooltipAndAccesskeyAttribs( 'p-logo' )
 		);
 		if ( !$imageOnly ) {
-			$html .= Html::element(
+			$language = $this->getSkin()->getLanguage();
+			$siteTitle = $language->convert( $this->getMsg( 'sitetitle' )->escaped() );
+
+			$html .= Html::rawElement(
 				'a',
 				[
 					'id' => 'p-banner',
 					'class' => 'mw-wiki-title',
 					'href' => $this->data['nav_urls']['mainpage']['href']
 				] + Linker::tooltipAndAccesskeyAttribs( 'p-logo' ),
-				$this->getMsg( 'sitetitle' )->text()
+				$siteTitle
 			);
 		}
 		$html .= Html::closeElement( 'div' );
