@@ -186,15 +186,45 @@ class ExampleTemplate extends BaseTemplate {
 					$html .= $this->getPortlet( 'tb', $this->getToolbox(), 'toolbox' );
 					break;
 				case 'LANGUAGES':
-					if ( $this->data['language_urls'] !== false ) {
-						$html .= $this->getPortlet( 'lang', $this->data['language_urls'], 'otherlanguages' );
-					}
+					$html .= $this->getLanguageLinks();
 					break;
 				default:
 					$html .= $this->getPortlet( $name, $content['content'] );
 					break;
 			}
 		}
+		return $html;
+	}
+
+	/**
+	 * In other languages list
+	 *
+	 * @return string html
+	 */
+	protected function getLanguageLinks() {
+		$html = '';
+		if ( $this->data['language_urls'] !== false ) {
+			$html .= $this->getPortlet( 'lang', $this->data['language_urls'], 'otherlanguages' );
+		}
+
+		return $html;
+	}
+
+	/**
+	 * Language variants. Displays list for converting between different scripts in the same language,
+	 * if using a language where this is applicable (such as latin vs cyric display for serbian).
+	 *
+	 * @return string html
+	 */
+	protected function getVariants() {
+		$html = '';
+		if ( count( $this->data['content_navigation']['variants'] ) > 0 ) {
+			$html .= $this->getPortlet(
+				'variants',
+				$this->data['content_navigation']['variants']
+			);
+		}
+
 		return $html;
 	}
 
@@ -210,12 +240,8 @@ class ExampleTemplate extends BaseTemplate {
 			'namespaces',
 			$this->data['content_navigation']['namespaces']
 		);
-		// Variants: Language variants. Displays list for converting between different scripts in the same language,
-		// if using a language where this is applicable.
-		$html .= $this->getPortlet(
-			'variants',
-			$this->data['content_navigation']['variants']
-		);
+		// Language variant options
+		$html .= $this->getVariants();
 		// 'View' actions for the page: view, edit, view history, etc
 		$html .= $this->getPortlet(
 			'views',
