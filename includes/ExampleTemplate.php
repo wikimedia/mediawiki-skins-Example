@@ -144,7 +144,7 @@ class ExampleTemplate extends BaseTemplate {
 		$html .= Html::rawElement(
 			'h3',
 			[],
-			Html::label( $this->getMsg( 'search' )->escaped(), 'searchInput' )
+			Html::label( $this->getMsg( 'search' )->text(), 'searchInput' )
 		);
 		$html .= $this->makeSearchInput( [ 'id' => 'searchInput' ] );
 		$html .= $this->makeSearchButton( 'go', [ 'id' => 'searchGoButton', 'class' => 'searchButton' ] );
