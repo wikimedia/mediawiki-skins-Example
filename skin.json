@@ -21,6 +21,7 @@
 	"ResourceModules": {
 		"skins.example": {
 			"class": "ResourceLoaderSkinModule",
+			"features": [ "elements", "content", "interface", "logo" ],
 			"styles": {
 				"resources/libraries/normalise.css": {
 					"media": "screen"
