@@ -376,11 +376,12 @@ class ExampleTemplate extends BaseTemplate {
 			'wrapper' => 'none',
 			'parameters' => []
 		];
+		'@phan-var array{wrapper:string,parameters:array} $options';
 
 		$html = '';
 
 		if ( $this->data[$object] ) {
-			if ( $options['wrapper'] == 'none' ) {
+			if ( $options['wrapper'] === 'none' ) {
 				$html .= $this->get( $object );
 			} else {
 				$html .= Html::rawElement(
@@ -422,6 +423,7 @@ class ExampleTemplate extends BaseTemplate {
 			// old toolbox hook support (use: [ 'SkinTemplateToolboxEnd' => [ &$skin, true ] ])
 			'hooks' => ''
 		];
+		'@phan-var array{id:string,class:string|array,extra-classes:string|array,body-wrapper:string,body-id:?string,body-class:string,list-item:array,list-prepend:string, hooks:string|array} $options';
 
 		// Handle the different $msg possibilities
 		if ( $msg === null ) {
@@ -559,6 +561,7 @@ class ExampleTemplate extends BaseTemplate {
 			'icon-style' => 'icononly',
 			'link-style' => null
 		];
+		'@phan-var array{id:string,order:string,link-prefix:string,icon-style:string,link-style:?string} $options';
 
 		$validFooterIcons = $this->getFooterIcons( $options['icon-style'] );
 		$validFooterLinks = $this->getFooterLinks( $options['link-style'] );
@@ -592,7 +595,7 @@ class ExampleTemplate extends BaseTemplate {
 
 		$linksHTML = '';
 		if ( count( $validFooterLinks ) > 0 ) {
-			if ( $options['link-style'] == 'flat' ) {
+			if ( $options['link-style'] === 'flat' ) {
 				$linksHTML .= Html::openElement( 'ul', [
 					'id' => "{$options['link-prefix']}-list",
 					'class' => 'footer-places'
@@ -628,7 +631,7 @@ class ExampleTemplate extends BaseTemplate {
 			}
 		}
 
-		if ( $options['order'] == 'iconsfirst' ) {
+		if ( $options['order'] === 'iconsfirst' ) {
 			$html .= $iconsHTML . $linksHTML;
 		} else {
 			$html .= $linksHTML . $iconsHTML;
