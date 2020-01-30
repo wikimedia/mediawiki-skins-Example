@@ -480,12 +480,10 @@ class ExampleTemplate extends BaseTemplate {
 			'title' => Linker::titleAttrib( $options['id'] ),
 			'aria-labelledby' => $labelId
 		];
-		if ( !is_array( $options['class'] ) ) {
-			$class = [ $options['class'] ];
-		}
-		if ( !is_array( $options['extra-classes'] ) ) {
-			$extraClasses = [ $options['extra-classes'] ];
-		}
+		$class = is_array( $options['class'] )
+			? $options['class'] : [ $options['class'] ];
+		$extraClasses = is_array( $options['extra-classes'] )
+			? $options['extra-classes'] : [ $options['extra-classes'] ];
 		$divOptions['class'] = array_merge( $class, $extraClasses );
 
 		$labelOptions = [
