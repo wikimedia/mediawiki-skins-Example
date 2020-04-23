@@ -55,7 +55,7 @@ pre {
 }
 
 // Splatter the menus and tools at the bottom
-#footer,
+.mw-footer,
 #page-tools,
 #p-personal {
 	margin: 1em 0;
@@ -80,10 +80,11 @@ pre {
 }
 
 // Footer
-#footer {
+.mw-footer {
 	clear: both;
 	border-top: 1px solid @border;
 
+	// stylelint-disable-next-line no-descending-specificity
 	ul {
 		margin-top: 1em;
 	}
