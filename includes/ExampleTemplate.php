@@ -189,6 +189,7 @@ class ExampleTemplate extends BaseTemplate {
 					$html .= $this->getLanguageLinks();
 					break;
 				default:
+					// @phan-suppress-next-line SecurityCheck-DoubleEscaped
 					$html .= $this->getPortlet( $name, $content['content'] );
 					break;
 			}
