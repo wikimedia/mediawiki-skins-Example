@@ -21,11 +21,14 @@
 	"ResourceModules": {
 		"skins.example": {
 			"class": "ResourceLoaderSkinModule",
-			"features": [ "elements", "content", "interface", "logo" ],
+			"features": [
+				"normalize",
+				"elements",
+				"content",
+				"interface",
+				"logo"
+			],
 			"styles": {
-				"resources/libraries/normalise.css": {
-					"media": "screen"
-				},
 				"resources/screen-common.less": {
 					"media": "screen"
 				},
