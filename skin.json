@@ -8,10 +8,22 @@
 	"license-name": "CC0-1.0",
 	"type": "skin",
 	"requires": {
-		"MediaWiki": ">= 1.29.0"
+		"MediaWiki": ">= 1.35.0"
 	},
 	"ValidSkinNames": {
-		"example": "Example"
+		"example": {
+			"class": "SkinExample",
+			"args": [ {
+				"name": "example",
+				"responsive": true,
+				"styles": [
+					"skins.example"
+				],
+				"scripts": [
+					"skins.example.js"
+				]
+			} ]
+		}
 	},
 	"MessagesDirs": {
 		"Example": [
