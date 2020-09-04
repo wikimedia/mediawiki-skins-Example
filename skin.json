@@ -20,6 +20,11 @@
 				"styles": [
 					"skins.example"
 				],
+				"messages": [
+					"search",
+					"tagline",
+					"navigation-heading"
+				],
 				"scripts": [
 					"skins.example.js"
 				]

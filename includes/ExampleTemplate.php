@@ -12,49 +12,10 @@ class ExampleTemplate extends BaseTemplate {
 	 * @return array of template data
 	 */
 	public function execute() {
-		$html = Html::rawElement( 'div', [ 'class' => 'mw-body', 'id' => 'content', 'role' => 'main' ],
-				$this->getSiteNotice() .
-				$this->getNewTalk() .
-				$this->getIndicators() .
-				Html::rawElement( 'h1',
-					[
-						'class' => 'firstHeading',
-						'lang' => $this->get( 'pageLanguage' )
-					],
-					$this->get( 'title' )
-				) .
-				Html::rawElement( 'div', [ 'id' => 'siteSub' ],
-					$this->getMsg( 'tagline' )->parse()
-				) .
-				Html::rawElement( 'div', [ 'class' => 'mw-body-content' ],
-					Html::rawElement( 'div', [ 'id' => 'contentSub' ],
-						$this->getPageSubtitle() .
-						Html::rawElement(
-							'p',
-							[],
-							$this->get( 'undelete' )
-						)
-					) .
-					$this->get( 'bodycontent' ) .
-					$this->getClear() .
-					Html::rawElement( 'div', [ 'class' => 'printfooter' ],
-						$this->get( 'printfooter' )
-					) .
-					$this->getCategoryLinks()
-				) .
-				$this->getDataAfterContent() .
-				$this->get( 'debughtml' )
-			) .
-			Html::rawElement( 'div', [ 'id' => 'mw-navigation' ],
-				Html::rawElement(
-					'h2',
-					[],
-					$this->getMsg( 'navigation-heading' )->parse()
-				) .
-				$this->getLogo() .
-				$this->getSearch() .
+			$logo = $this->getLogo();
+
 				// User profile links
-				Html::rawElement(
+			$nav = Html::rawElement(
 					'div',
 					[ 'id' => 'user-tools' ],
 					$this->getUserLinks()
@@ -64,18 +25,13 @@ class ExampleTemplate extends BaseTemplate {
 					'div',
 					[ 'id' => 'page-tools' ],
 					$this->getPageLinks()
-				) .
-				// Site navigation/sidebar
-				Html::rawElement(
-					'div',
-					[ 'id' => 'site-navigation' ],
-					$this->getSiteNavigation()
-				)
-			) .
-			$this->getFooterBlock();
+				);
 
 		return [
-			'html-example-skin' => $html,
+			'html-example-logo' => $logo,
+			'html-example-navlinks' => $nav,
+			'html-example-sitenav' => $this->getSiteNavigation(),
+			'html-example-footer' => $this->getFooterBlock(),
 		];
 	}
 
@@ -123,33 +79,6 @@ class ExampleTemplate extends BaseTemplate {
 	}
 
 	/**
-	 * Generates the search form
-	 * @return string html
-	 */
-	protected function getSearch() {
-		$html = Html::openElement(
-			'form',
-			[
-				'action' => $this->get( 'wgScript' ),
-				'role' => 'search',
-				'class' => 'mw-portlet',
-				'id' => 'p-search'
-			]
-		);
-		$html .= Html::hidden( 'title', $this->get( 'searchtitle' ) );
-		$html .= Html::rawElement(
-			'h3',
-			[],
-			Html::label( $this->getMsg( 'search' )->text(), 'searchInput' )
-		);
-		$html .= $this->makeSearchInput( [ 'id' => 'searchInput' ] );
-		$html .= $this->makeSearchButton( 'go', [ 'id' => 'searchGoButton', 'class' => 'searchButton' ] );
-		$html .= Html::closeElement( 'form' );
-
-		return $html;
-	}
-
-	/**
 	 * Generates the sidebar
 	 * Set the elements to true to allow them to be part of the sidebar
 	 * Or get rid of this entirely, and take the specific bits to use wherever you actually want them
@@ -176,7 +105,6 @@ class ExampleTemplate extends BaseTemplate {
 
 			switch ( $name ) {
 				case 'SEARCH':
-					$html .= $this->getSearch();
 					break;
 				case 'TOOLBOX':
 					$html .= $this->getPortlet( 'tb', $this->getToolbox(), 'toolbox' );
@@ -312,52 +240,6 @@ class ExampleTemplate extends BaseTemplate {
 
 		return $html;
 		*/
-	}
-
-	/**
-	 * Generates siteNotice, if any
-	 * @return string html
-	 */
-	protected function getSiteNotice() {
-		return $this->getIfExists( 'sitenotice', [
-			'wrapper' => 'div',
-			'parameters' => [ 'id' => 'siteNotice' ]
-		] );
-	}
-
-	/**
-	 * Generates new talk message banner, if any
-	 * @return string html
-	 */
-	protected function getNewTalk() {
-		return $this->getIfExists( 'newtalk', [
-			'wrapper' => 'div',
-			'parameters' => [ 'class' => 'usermessage' ]
-		] );
-	}
-
-	/**
-	 * Generates subtitle stuff, if any
-	 * @return string html
-	 */
-	protected function getPageSubtitle() {
-		return $this->getIfExists( 'subtitle', [ 'wrapper' => 'p' ] );
-	}
-
-	/**
-	 * Generates category links, if any
-	 * @return string html
-	 */
-	protected function getCategoryLinks() {
-		return $this->getIfExists( 'catlinks' );
-	}
-
-	/**
-	 * Generates data after content stuff, if any
-	 * @return string html
-	 */
-	protected function getDataAfterContent() {
-		return $this->getIfExists( 'dataAfterContent' );
 	}
 
 	/**
