@@ -1,19 +1,18 @@
 <?php
 /**
  * BaseTemplate class for the Example skin
+ * This code will be migrated into SkinExample. Please use SkinExample
+ * and skin.mustache from now on.
  *
  * @ingroup Skins
  */
 class ExampleTemplate extends BaseTemplate {
 	/**
 	 * Outputs the entire contents of the page
+	 * @return array of template data
 	 */
 	public function execute() {
-		$html = '';
-		$html .= $this->get( 'headelement' );
-
-		$html .= Html::rawElement( 'div', [ 'id' => 'mw-wrapper' ],
-			Html::rawElement( 'div', [ 'class' => 'mw-body', 'id' => 'content', 'role' => 'main' ],
+		$html = Html::rawElement( 'div', [ 'class' => 'mw-body', 'id' => 'content', 'role' => 'main' ],
 				$this->getSiteNotice() .
 				$this->getNewTalk() .
 				$this->getIndicators() .
@@ -73,14 +72,11 @@ class ExampleTemplate extends BaseTemplate {
 					$this->getSiteNavigation()
 				)
 			) .
-			$this->getFooterBlock()
-		);
+			$this->getFooterBlock();
 
-		$html .= $this->getTrail();
-		$html .= Html::closeElement( 'body' );
-		$html .= Html::closeElement( 'html' );
-
-		echo $html;
+		return [
+			'html-example-skin' => $html,
+		];
 	}
 
 	/**

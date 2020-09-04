@@ -4,8 +4,16 @@
  *
  * @ingroup Skins
  */
-class SkinExample extends SkinTemplate {
-	public $skinname = 'example',
-		$stylename = 'Example',
-		$template = 'ExampleTemplate';
+class SkinExample extends SkinMustache {
+	public $template = 'ExampleTemplate';
+
+	/**
+	 * @inheritDoc
+	 */
+	public function getTemplateData() {
+		$data = parent::getTemplateData();
+		$tpl = $this->prepareQuickTemplate();
+		$tplData = $tpl->execute();
+		return $data + $tplData;
+	}
 }
