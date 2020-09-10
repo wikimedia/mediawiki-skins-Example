@@ -42,14 +42,21 @@
 			{{{html-button-search}}}
 		</form>
 		{{/data-search-box}}
+		{{#data-portlets}}
 		<div id="user-tools">
-			{{{html-example-user-tools}}}
+			{{#data-personal}}{{>Portlet}}{{/data-personal}}
 		</div>
 		<div id="page-tools">
-			{{{html-example-page-links}}}
+			{{#data-namespaces}}{{>Portlet}}{{/data-namespaces}}
+			{{#data-variants}}{{>Portlet}}{{/data-variants}}
+			{{#data-views}}{{>Portlet}}{{/data-views}}
+			{{#data-actions}}{{>Portlet}}{{/data-actions}}
 		</div>
+		{{/data-portlets}}
 		<div id="site-navigation">
-		{{{html-example-sitenav}}}
+			{{#data-portlets-sidebar.data-portlets-first}}{{>Portlet}}{{/data-portlets-sidebar.data-portlets-first}}
+			{{#data-portlets-sidebar.array-portlets-rest}}{{>Portlet}}{{/data-portlets-sidebar.array-portlets-rest}}
+			{{#data-portlets.lang}}{{>Portlet}}{{/data-portlets.lang}}
 		</div>
 	</div>
 	<div id="footer" class="mw-footer" role="contentinfo" {{{html-user-language-attributes}}}>
