@@ -12,70 +12,12 @@ class ExampleTemplate extends BaseTemplate {
 	 * @return array of template data
 	 */
 	public function execute() {
-			$logo = $this->getLogo();
-
-				// User profile links
-			$nav = Html::rawElement(
-					'div',
-					[ 'id' => 'user-tools' ],
-					$this->getUserLinks()
-				) .
-				// Page editing and tools
-				Html::rawElement(
-					'div',
-					[ 'id' => 'page-tools' ],
-					$this->getPageLinks()
-				);
-
 		return [
-			'html-example-logo' => $logo,
-			'html-example-navlinks' => $nav,
+			'html-example-user-tools' => $this->getUserLinks(),
+			'html-example-page-links' => $this->getPageLinks(),
 			'html-example-sitenav' => $this->getSiteNavigation(),
-			'html-example-footer' => $this->getFooterBlock(),
+			'html-example-footer' => $this->getFooterHTML(),
 		];
-	}
-
-	/**
-	 * Generates the logo and (optionally) site title
-	 * @param string $id
-	 * @param bool $imageOnly Whether or not to generate the logo with only the image,
-	 * or with a text link as well
-	 *
-	 * @return string html
-	 */
-	protected function getLogo( $id = 'p-logo', $imageOnly = false ) {
-		$html = Html::openElement(
-			'div',
-			[
-				'id' => $id,
-				'class' => 'mw-portlet',
-				'role' => 'banner'
-			]
-		);
-		$html .= Html::element(
-			'a',
-			[
-				'href' => $this->data['nav_urls']['mainpage']['href'],
-				'class' => 'mw-wiki-logo',
-			] + Linker::tooltipAndAccesskeyAttribs( 'p-logo' )
-		);
-		if ( !$imageOnly ) {
-			$language = $this->getSkin()->getLanguage();
-			$siteTitle = $language->convert( $this->getMsg( 'sitetitle' )->escaped() );
-
-			$html .= Html::rawElement(
-				'a',
-				[
-					'id' => 'p-banner',
-					'class' => 'mw-wiki-title',
-					'href' => $this->data['nav_urls']['mainpage']['href']
-				] + Linker::tooltipAndAccesskeyAttribs( 'p-logo' ),
-				$siteTitle
-			);
-		}
-		$html .= Html::closeElement( 'div' );
-
-		return $html;
 	}
 
 	/**
@@ -415,53 +357,20 @@ class ExampleTemplate extends BaseTemplate {
 	}
 
 	/**
-	 * Better renderer for getFooterIcons and getFooterLinks, based on Vector
-	 *
-	 * @param array $setOptions Miscellaneous other options
-	 * * 'id' for footer id
-	 * * 'class' for footer class
-	 * * 'order' to determine whether icons or links appear first: 'iconsfirst' or links, though in
-	 *   practice we currently only check if it is or isn't 'iconsfirst'
-	 * * 'link-prefix' to set the prefix for all link and block ids; most skins use 'f' or 'footer',
-	 *   as in id='f-whatever' vs id='footer-whatever'
-	 * * 'icon-style' to pass to getFooterIcons: "icononly", "nocopyright"
-	 * * 'link-style' to pass to getFooterLinks: "flat" to disable categorisation of links in a
-	 *   nested array
-	 *
 	 * @return string html
 	 */
-	protected function getFooterBlock( $setOptions = [] ) {
-		// Set options and fill in defaults
-		$options = $setOptions + [
-			'id' => 'footer',
-			'class' => 'mw-footer',
-			'order' => 'iconsfirst',
-			'link-prefix' => 'footer',
-			'icon-style' => 'icononly',
-			'link-style' => null
-		];
-		'@phan-var array{id:string,class:string,order:string,link-prefix:string,icon-style:string,link-style:?string} $options';
-
-		$validFooterIcons = $this->getFooterIcons( $options['icon-style'] );
-		$validFooterLinks = $this->getFooterLinks( $options['link-style'] );
+	protected function getFooterHTML() {
+		$validFooterIcons = $this->getFooterIcons( 'icononly' );
+		$validFooterLinks = $this->getFooterLinks( null );
 
 		$html = '';
-
-		$html .= Html::openElement( 'div', [
-			'id' => $options['id'],
-			'class' => $options['class'],
-			'role' => 'contentinfo',
-			'lang' => $this->get( 'userlang' ),
-			'dir' => $this->get( 'dir' )
-		] );
-
 		$iconsHTML = '';
 		if ( count( $validFooterIcons ) > 0 ) {
-			$iconsHTML .= Html::openElement( 'ul', [ 'id' => "{$options['link-prefix']}-icons" ] );
+			$iconsHTML .= Html::openElement( 'ul', [ 'id' => "footer-icons" ] );
 			foreach ( $validFooterIcons as $blockName => $footerIcons ) {
 				$iconsHTML .= Html::openElement( 'li', [
 					'id' => Sanitizer::escapeIdForAttribute(
-						"{$options['link-prefix']}-{$blockName}ico"
+						"footer-{$blockName}ico"
 					),
 					'class' => 'footer-icons'
 				] );
@@ -475,49 +384,28 @@ class ExampleTemplate extends BaseTemplate {
 
 		$linksHTML = '';
 		if ( count( $validFooterLinks ) > 0 ) {
-			if ( $options['link-style'] === 'flat' ) {
-				$linksHTML .= Html::openElement( 'ul', [
-					'id' => "{$options['link-prefix']}-list",
-					'class' => 'footer-places'
-				] );
-				foreach ( $validFooterLinks as $link ) {
+			$linksHTML .= Html::openElement( 'div', [ 'id' => "footer-list" ] );
+			foreach ( $validFooterLinks as $category => $links ) {
+				$linksHTML .= Html::openElement( 'ul',
+					[ 'id' => Sanitizer::escapeIdForAttribute(
+						"footer-{$category}"
+					) ]
+				);
+				foreach ( $links as $link ) {
 					$linksHTML .= Html::rawElement(
 						'li',
-						[ 'id' => Sanitizer::escapeIdForAttribute( $link ) ],
+						[ 'id' => Sanitizer::escapeIdForAttribute(
+							"footer-{$category}-{$link}"
+						) ],
 						$this->get( $link )
 					);
 				}
 				$linksHTML .= Html::closeElement( 'ul' );
-			} else {
-				$linksHTML .= Html::openElement( 'div', [ 'id' => "{$options['link-prefix']}-list" ] );
-				foreach ( $validFooterLinks as $category => $links ) {
-					$linksHTML .= Html::openElement( 'ul',
-						[ 'id' => Sanitizer::escapeIdForAttribute(
-							"{$options['link-prefix']}-{$category}"
-						) ]
-					);
-					foreach ( $links as $link ) {
-						$linksHTML .= Html::rawElement(
-							'li',
-							[ 'id' => Sanitizer::escapeIdForAttribute(
-								"{$options['link-prefix']}-{$category}-{$link}"
-							) ],
-							$this->get( $link )
-						);
-					}
-					$linksHTML .= Html::closeElement( 'ul' );
-				}
-				$linksHTML .= Html::closeElement( 'div' );
 			}
+			$linksHTML .= Html::closeElement( 'div' );
 		}
 
-		if ( $options['order'] === 'iconsfirst' ) {
-			$html .= $iconsHTML . $linksHTML;
-		} else {
-			$html .= $linksHTML . $iconsHTML;
-		}
-
-		$html .= $this->getClear() . Html::closeElement( 'div' );
+		$html .= $iconsHTML . $linksHTML;
 
 		return $html;
 	}

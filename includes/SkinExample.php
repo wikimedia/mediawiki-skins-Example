@@ -14,6 +14,14 @@ class SkinExample extends SkinMustache {
 		$data = parent::getTemplateData();
 		$tpl = $this->prepareQuickTemplate();
 		$tplData = $tpl->execute();
-		return $data + $tplData;
+		return $data + $tplData + [
+			'html-example-logo' => Html::element(
+				'a',
+				[
+					'href' => self::makeMainPageUrl(),
+					'class' => 'mw-wiki-logo',
+				] + Linker::tooltipAndAccesskeyAttribs( 'p-logo' )
+			),
+		];
 	}
 }
