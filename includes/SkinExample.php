@@ -11,10 +11,7 @@ class SkinExample extends SkinMustache {
 	 * @inheritDoc
 	 */
 	public function getTemplateData() {
-		$data = parent::getTemplateData();
-		$tpl = $this->prepareQuickTemplate();
-		$tplData = $tpl->execute();
-		return $data + $tplData + [
+		return parent::getTemplateData() + [
 			'example-main-page-url' => self::makeMainPageUrl(),
 		];
 	}
