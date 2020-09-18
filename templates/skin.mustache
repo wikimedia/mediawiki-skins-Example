@@ -24,7 +24,13 @@
 	<div id="mw-navigation">
 		<h2>{{msg-navigation-heading}}</h2>
 		<div id="p-logo" class="mw-portlet" role="banner">
-			{{{html-example-logo}}}
+			<a href="{{example-main-page-url}}">
+			{{#data-logos}}
+				{{#icon}}<img src="{{.}}" width="40" height="40">{{/icon}}
+				{{#wordmark}}<img src="{{src}}" width="{{width}}" height="{{height}}">{{/wordmark}}
+				{{^wordmark}}<h1>{{msg-sitetitle}}</h1>{{/wordmark}}
+			{{/data-logos}}
+			</a>
 		</div>
 		{{#data-search-box}}
 		<form action="{{form-action}}" role="search" class="mw-portlet" id="p-search">

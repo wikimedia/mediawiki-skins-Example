@@ -21,6 +21,7 @@
 					"skins.example"
 				],
 				"messages": [
+					"sitetitle",
 					"search",
 					"tagline",
 					"navigation-heading"
