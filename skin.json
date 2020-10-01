@@ -40,13 +40,13 @@
 	"ResourceModules": {
 		"skins.example": {
 			"class": "ResourceLoaderSkinModule",
-			"features": [
-				"normalize",
-				"elements",
-				"content",
-				"interface",
-				"logo"
-			],
+			"features": {
+				"normalize": true,
+				"elements": true,
+				"content": true,
+				"interface": true,
+				"logo": true
+			},
 			"styles": {
 				"resources/screen-common.less": {
 					"media": "screen"
