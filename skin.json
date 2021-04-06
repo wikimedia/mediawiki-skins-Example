@@ -46,6 +46,7 @@
 				"content": true,
 				"content-parser-output": true,
 				"interface": true,
+				"interface-category": true,
 				"logo": true
 			},
 			"styles": {
