@@ -16,7 +16,6 @@
 			"args": [ {
 				"name": "example",
 				"responsive": true,
-				"templateDirectory": "skins/Example/templates",
 				"styles": [
 					"skins.example"
 				],
