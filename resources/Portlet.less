@@ -1,0 +1,33 @@
+@import 'mediawiki.skin.variables';
+@import 'variables.less';
+
+.mw-portlet {
+	position: relative;
+
+	ul {
+		margin: 0;
+	}
+
+	h3 {
+		display: none;
+	}
+
+	li {
+		display: inline-block;
+		margin-right: 10px;
+	}
+
+	input[ type='checkbox' ] {
+		display: block;
+		position: absolute;
+		opacity: 0;
+		cursor: pointer;
+		top: 0;
+		left: 0;
+		z-index: 1;
+		width: 100%;
+		height: 100%;
+		margin: 0;
+		padding: 0;
+	}
+}

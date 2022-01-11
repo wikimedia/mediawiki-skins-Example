@@ -1,6 +1,7 @@
 /* Common styling for the Example skin */
 
 @import 'variables.less';
+@import 'mediawiki.mixins.less';
 
 // Page layout
 
@@ -77,6 +78,10 @@ pre {
 
 #mw-navigation {
 	margin: 1em 0;
+
+	h2 {
+		.mixin-screen-reader-text;
+	}
 }
 
 // Footer
@@ -98,5 +103,5 @@ pre {
 #page-tools h3,
 #p-search h3,
 #p-personal h3 {
-	.hidden;
+	.mixin-screen-reader-text;
 }

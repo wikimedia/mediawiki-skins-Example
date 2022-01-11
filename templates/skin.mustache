@@ -7,7 +7,7 @@
 		<div id="{{id}}" class="{{class}}">{{{html}}}</div>
 		{{/array-indicators}}
 		</div>
-		<h1 class="firstHeading" {{{html-user-language-attributes}}}>{{{html-title}}}</h1>
+		{{{html-title-heading}}}
 		<div id="siteSub">{{msg-tagline}}</div>
 		<div class="mw-body-content">
 			<div id="contentSub">
@@ -17,7 +17,9 @@
 			{{{html-body-content}}}
 			<!-- todo: replace with .mixin-clearfix -->
 			<div class="visualClear"></div>
-			{{{html-categories}}}
+			{{#data-portlets}}
+			{{>CategoryPortlet}}
+			{{/data-portlets}}
 		</div>
 		{{{html-after-content}}}
 	</div>

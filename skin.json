@@ -1,34 +1,42 @@
 {
 	"name": "Example",
-	"version": "1.0",
-	"author": "...",
+	"version": "1.0.0",
+	"author": [
+		"..."
+	],
 	"url": "https://www.mediawiki.org/wiki/Skin:Example",
-	"descriptionmsg": "example-desc",
+	"descriptionmsg": "example-skin-desc",
 	"namemsg": "skinname-example",
 	"license-name": "CC0-1.0",
 	"type": "skin",
 	"requires": {
-		"MediaWiki": ">= 1.36.0"
+		"MediaWiki": ">= 1.38.0"
 	},
 	"ValidSkinNames": {
 		"example": {
 			"class": "SkinMustache",
-			"args": [ {
-				"name": "example",
-				"responsive": true,
-				"styles": [
-					"skins.example"
-				],
-				"messages": [
-					"sitetitle",
-					"search",
-					"tagline",
-					"navigation-heading"
-				],
-				"scripts": [
-					"skins.example.js"
-				]
-			} ]
+			"args": [
+				{
+					"name": "example",
+					"responsive": true,
+					"messages": [
+						"example-no-categories",
+						"sitetitle",
+						"search",
+						"otherlanguages",
+						"tagline",
+						"navigation-heading"
+					],
+					"styles": [
+						"mediawiki.ui.icon",
+						"mediawiki.ui.button",
+						"skins.example.styles"
+					],
+					"scripts": [
+						"skins.example"
+					]
+				}
+			]
 		}
 	},
 	"MessagesDirs": {
@@ -37,35 +45,34 @@
 		]
 	},
 	"ResourceModules": {
-		"skins.example": {
+		"skins.example.styles": {
 			"class": "ResourceLoaderSkinModule",
 			"features": {
 				"normalize": true,
 				"elements": true,
-				"content": true,
-				"content-parser-output": true,
-				"interface": true,
-				"interface-category": true,
-				"logo": true
+				"content-tables": true,
+				"content-links": false,
+				"content-media": false,
+				"content-links-external": false,
+				"interface-message-box": true,
+				"interface-category": false,
+				"toc": true
 			},
-			"styles": {
-				"resources/screen-common.less": {
-					"media": "screen"
-				},
-				"resources/screen-desktop.less": {
-					"media": "screen and (min-width: 751px)"
-				},
-				"resources/screen-mobile.less": {
-					"media": "screen and (max-width: 750px)"
-				},
-				"resources/print.css": {
-					"media": "print"
-				}
-			}
+			"targets": [
+				"desktop",
+				"mobile"
+			],
+			"styles": [
+				"resources/skin.less"
+			]
 		},
-		"skins.example.js": {
-			"scripts": [
-				"resources/main.js"
+		"skins.example": {
+			"targets": [
+				"desktop",
+				"mobile"
+			],
+			"packageFiles": [
+				"resources/skin.js"
 			]
 		}
 	},
@@ -78,5 +85,5 @@
 			"+ext.echo.styles.badge": "resources/extensions/echo.styles.badge.less"
 		}
 	},
-	"manifest_version": 1
+	"manifest_version": 2
 }
