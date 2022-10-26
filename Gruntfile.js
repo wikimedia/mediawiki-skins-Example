@@ -19,9 +19,6 @@ module.exports = function ( grunt ) {
 			all: 'i18n/'
 		},
 		stylelint: {
-			options: {
-				syntax: 'less'
-			},
 			all: [
 				'*.{less,css}',
 				'**/*.{less,css}',
