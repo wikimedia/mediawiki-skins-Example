@@ -1,0 +1,10 @@
+{{! `role` is unnecessary but kept to support selectors in any gadgets or user styles and
+	to mitigate a VoiceOver bug. }}
+<footer id="footer" class="mw-footer" role="contentinfo" {{{html-user-language-attributes}}}>
+	{{!}}{{#data-icons}}{{>FooterList}}{{/data-icons}}
+	{{!}}<div id="footer-list">
+	{{#data-last-modified}}{{>LastModifiedLine}}{{/data-last-modified}}
+	<div id="copyright">{{#data-copyright}}{{{html}}}{{/data-copyright}}</div>
+	{{!}}{{#data-places}}{{>FooterList}}{{/data-places}}
+	{{!}}</div>
+</footer>
