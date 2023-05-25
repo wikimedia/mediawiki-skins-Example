@@ -28,8 +28,6 @@
 						"navigation-heading"
 					],
 					"styles": [
-						"mediawiki.ui.icon",
-						"mediawiki.ui.button",
 						"skins.example.styles"
 					],
 					"scripts": [
