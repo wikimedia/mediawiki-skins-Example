@@ -1,4 +1,11 @@
+// Reference all skin stylesheets and variables aside of extension specific.
+// Note, that 'screen-*' and 'print.css' stylesheets are imported in 'common.less'.
+
+// Import MediaWiki skin variables for general fundamental styling.
 @import 'mediawiki.skin.variables.less';
+// Import skin specific variables beyond MediaWiki skin variables scope.
 @import 'variables.less';
-@import 'Portlet.less';
+// Import common skin style rules.
 @import 'common.less';
+// Import specific module style rules.
+@import 'Portlet.less';
