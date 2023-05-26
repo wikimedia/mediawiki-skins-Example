@@ -64,15 +64,5 @@
 			{{#data-portlets.data-languages}}{{>Portlet}}{{/data-portlets.data-languages}}
 		</div>
 	</div>
-	<div id="footer" class="mw-footer" role="contentinfo" {{{html-user-language-attributes}}}>
-		{{#data-footer}}
-		{{!}}{{#data-icons}}{{>FooterList}}{{/data-icons}}
-		{{!}}<div id="footer-list">
-		{{!}}{{#data-info}}{{>FooterList}}{{/data-info}}
-		{{!}}{{#data-places}}{{>FooterList}}{{/data-places}}
-		{{!}}</div>
-		{{/data-footer}}
-		<!-- todo: replace with .mixin-clearfix -->
-		<div class="visualClear"></div>
-	</div>
+	{{#data-footer}}{{>Footer}}{{/data-footer}}
 </div>
