@@ -1,26 +1,26 @@
 {
-	"name": "Example",
+	"name": "Kagaga-skin",
 	"version": "1.0.0",
 	"author": [
-		"..."
+		"Masayuki Kobayashi"
 	],
-	"url": "https://www.mediawiki.org/wiki/Skin:Example",
-	"descriptionmsg": "example-skin-desc",
-	"namemsg": "skinname-example",
-	"license-name": "CC0-1.0",
+	"url": "https://kagaga.jp",
+	"descriptionmsg": "kagaga-skin-desc",
+	"namemsg": "kagaga-specialversion-name",
+	"license-name": "CC-BY-SA-4.0",
 	"type": "skin",
 	"requires": {
 		"MediaWiki": ">= 1.38.0"
 	},
 	"ValidSkinNames": {
-		"example": {
+		"kagaga-skin": {
 			"class": "SkinMustache",
 			"args": [
 				{
-					"name": "example",
+					"name": "kagaga-skin",
 					"responsive": true,
 					"messages": [
-						"example-no-categories",
+						"kagaga-skin-categories",
 						"sitetitle",
 						"search",
 						"otherlanguages",
@@ -30,22 +30,22 @@
 					"styles": [
 						"mediawiki.ui.icon",
 						"mediawiki.ui.button",
-						"skins.example.styles"
+						"skins.kagaga-skin.styles"
 					],
 					"scripts": [
-						"skins.example"
+						"skins.kagaga-skin"
 					]
 				}
 			]
 		}
 	},
 	"MessagesDirs": {
-		"Example": [
+		"Kagaga-skin": [
 			"i18n"
 		]
 	},
 	"ResourceModules": {
-		"skins.example.styles": {
+		"skins.kagaga-skin.styles": {
 			"class": "ResourceLoaderSkinModule",
 			"features": {
 				"normalize": true,
@@ -66,7 +66,7 @@
 				"resources/skin.less"
 			]
 		},
-		"skins.example": {
+		"skins.kagaga-skin": {
 			"targets": [
 				"desktop",
 				"mobile"
@@ -78,10 +78,10 @@
 	},
 	"ResourceFileModulePaths": {
 		"localBasePath": "",
-		"remoteSkinPath": "Example"
+		"remoteSkinPath": "Kagaga-skin"
 	},
 	"ResourceModuleSkinStyles": {
-		"example": {
+		"kagaga-skin": {
 			"+ext.echo.styles.badge": "resources/extensions/echo.styles.badge.less"
 		}
 	},
