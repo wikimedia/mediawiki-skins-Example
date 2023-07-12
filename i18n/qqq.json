@@ -1,10 +1,10 @@
 {
 	"@metadata": {
 		"authors": [
-			"..."
+			"Masayuki Kobayashi"
 		]
 	},
-	"skinname-example": "{{optional}}",
-	"example-desc": "{{desc|what=skin|name=Example|url=https://www.mediawiki.org/wiki/Skin:Example}}",
-	"example-no-categories": "Message to show when no categories available"
+	"kagaga-specialversion-name": "{{optional}}",
+	"kagaga-skin-desc": "{{desc|what=skin|name=Example|url=https://www.mediawiki.org/wiki/Skin:Example}}",
+	"kagaga-skin-categories": "Message to show when no categories available"
 }
