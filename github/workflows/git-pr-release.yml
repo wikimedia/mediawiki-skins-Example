@@ -1,0 +1,19 @@
+name: 📄 git-pr-release
+on:
+  push:
+    branches:
+      - develop
+jobs:
+  gitPrRelease:
+    name: git-pr-release
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+      with:
+        fetch-depth: 0
+    - name: git-pr-release
+      uses: shinnoki/git-pr-release-action@set-safe-directory
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GIT_PR_RELEASE_BRANCH_STAGING: develop
+        GIT_PR_RELEASE_LABELS: Release
