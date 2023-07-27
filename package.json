@@ -1,4 +1,5 @@
 {
+	"name": "Example",
 	"private": true,
 	"scripts": {
 		"test": "npm -s run lint",
@@ -10,8 +11,8 @@
 		"lint:i18n": "banana-checker i18n/"
 	},
 	"devDependencies": {
-		"eslint-config-wikimedia": "0.20.0",
-		"grunt-banana-checker": "0.9.0",
-		"stylelint-config-wikimedia": "0.11.1"
+		"eslint-config-wikimedia": "0.24.0",
+		"grunt-banana-checker": "0.10.0",
+		"stylelint-config-wikimedia": "0.13.1"
 	}
 }

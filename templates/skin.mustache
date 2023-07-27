@@ -46,7 +46,10 @@
 		{{/data-search-box}}
 		{{#data-portlets}}
 		<div id="user-tools">
-			{{#data-personal}}{{>Portlet}}{{/data-personal}}
+			{{#data-user-page}}{{>Portlet}}{{/data-user-page}}
+			{{#data-notifications}}{{>Portlet}}{{/data-notifications}}
+			{{#data-user-interface-preferences}}{{>Portlet}}{{/data-user-interface-preferences}}
+			{{#data-user-menu}}{{>Portlet}}{{/data-user-menu}}
 		</div>
 		<div id="page-tools">
 			{{#data-namespaces}}{{>Portlet}}{{/data-namespaces}}
