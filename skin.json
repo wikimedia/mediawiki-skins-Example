@@ -7,7 +7,7 @@
 	"url": "https://kagaga.jp",
 	"descriptionmsg": "kagaga-skin-desc",
 	"namemsg": "kagaga-specialversion-name",
-	"license-name": "CC-BY-SA-4.0",
+	"license-name": "MIT",
 	"type": "skin",
 	"requires": {
 		"MediaWiki": ">= 1.38.0"
