@@ -18,6 +18,7 @@
 			"args": [
 				{
 					"name": "example",
+					"supportsMwHeading": true,
 					"responsive": true,
 					"messages": [
 						"example-no-categories",
