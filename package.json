@@ -13,6 +13,6 @@
 	"devDependencies": {
 		"eslint-config-wikimedia": "0.28.2",
 		"grunt-banana-checker": "0.13.0",
-		"stylelint-config-wikimedia": "0.17.2"
+		"stylelint-config-wikimedia": "0.18.0"
 	}
 }
