@@ -11,7 +11,7 @@
 		"lint:i18n": "banana-checker i18n/"
 	},
 	"devDependencies": {
-		"eslint-config-wikimedia": "0.32.2",
+		"eslint-config-wikimedia": "0.32.3",
 		"grunt-banana-checker": "0.13.0",
 		"stylelint-config-wikimedia": "0.18.0"
 	}
