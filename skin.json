@@ -10,7 +10,7 @@
 	"license-name": "CC0-1.0",
 	"type": "skin",
 	"requires": {
-		"MediaWiki": ">= 1.45"
+		"MediaWiki": ">= 1.46"
 	},
 	"ValidSkinNames": {
 		"example": {
@@ -19,6 +19,16 @@
 				{
 					"name": "example",
 					"responsive": true,
+					"menus": [
+						"user-page",
+						"notifications",
+						"associated-pages",
+						"variants",
+						"views",
+						"actions",
+						"user-interface-preferences",
+						"languages"
+					],
 					"messages": [
 						"example-no-categories",
 						"sitetitle",
@@ -52,23 +62,14 @@
 				"content-links": false,
 				"content-media": false,
 				"content-links-external": false,
-				"interface-message-box": true,
 				"interface-category": false,
 				"toc": true
 			},
-			"targets": [
-				"desktop",
-				"mobile"
-			],
 			"styles": [
 				"resources/skin.less"
 			]
 		},
 		"skins.example": {
-			"targets": [
-				"desktop",
-				"mobile"
-			],
 			"packageFiles": [
 				"resources/skin.js"
 			]
